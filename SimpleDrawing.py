@@ -77,6 +77,10 @@ def tool_callbacks(caller_button):
         add_spacing(count=1, parent="Tool Specifications")
         add_separator(parent="Tool Specifications")
 
+        add_spacing(count=2, parent="Tool Specifications")
+        add_text("How to use: ", parent="Tool Specifications")
+        add_text("Left click on the drawing pad to set\nthe first point. Then left click again to\nend the line tool.", parent="Tool Specifications")
+
         set_item_callback("Apply", callback=apply_settings_dispatcher, callback_data="straight line tool")
         set_item_callback("Cancel", callback=apply_settings_dispatcher, callback_data="cancel tool")
 
@@ -104,6 +108,10 @@ def tool_callbacks(caller_button):
         add_spacing(count=1, parent="Tool Specifications")
         add_separator(parent="Tool Specifications")
 
+        add_spacing(count=2, parent="Tool Specifications")
+        add_text("How to use: ", parent="Tool Specifications")
+        add_text("Left click on the drawing pad to set\nthe first point. Then left click again to\nend the line tool.", parent="Tool Specifications")
+
         set_item_callback("Apply", callback=apply_settings_dispatcher, callback_data="polyline tool")
         set_item_callback("Cancel", callback=apply_settings_dispatcher, callback_data="cancel tool")
 
@@ -130,6 +138,10 @@ def tool_callbacks(caller_button):
         add_button("Apply", parent="Tool Specifications", height=30, width=110)
         add_spacing(count=1, parent="Tool Specifications")
         add_separator(parent="Tool Specifications")
+
+        add_spacing(count=2, parent="Tool Specifications")
+        add_text("How to use: ", parent="Tool Specifications")
+        add_text("Left click on the drawing pad to set\nthe first point. Then left click again to\nend the line tool.", parent="Tool Specifications")
 
         set_item_callback("Apply", callback=apply_settings_dispatcher, callback_data="doodle tool")
         set_item_callback("Cancel", callback=apply_settings_dispatcher, callback_data="cancel tool")
