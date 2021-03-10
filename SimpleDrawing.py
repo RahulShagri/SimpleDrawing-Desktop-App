@@ -248,9 +248,15 @@ with window("Mouse Pad Coordinates", no_close=True, no_collapse=True, no_resize=
     add_label_text("##pad_coordinates", default_value="(0,0)", color=[100, 100, 100])
 
 #-----Window to display SimpleDrawing version number-----#
-with window("SimpleDrawing Version", no_close=True, no_collapse=True, no_resize=True, no_title_bar=True, x_pos=60, y_pos=670, no_move=True, height=50, width=250):
-    set_item_color("SimpleDrawing Version", color=[225, 225, 225], style=mvGuiCol_WindowBg)
-    add_text("SimpleDrawing v0.1", color=[100, 100, 100])
+with window("SimpleDrawing Name", no_close=True, no_collapse=True, no_resize=True, no_title_bar=True, x_pos=60, y_pos=670, no_move=True, height=50, width=350):
+    set_item_color("SimpleDrawing Name", color=[225, 225, 225], style=mvGuiCol_WindowBg)
+    add_text("SimpleDrawing", color=[100, 100, 100])
+    add_same_line(spacing=4)
+
+#-----Window to credit Dear PyGui-----#
+with window("DPG", no_close=True, no_collapse=True, no_resize=True, no_title_bar=True, x_pos=310, y_pos=670, no_move=True, height=50, width=350):
+    set_item_color("DPG", color=[225, 225, 225], style=mvGuiCol_WindowBg)
+    add_text("Powered by Dear PyGui", color=[100, 100, 100])
     add_same_line(spacing=4)
 
 set_mouse_move_callback(pad_mouse_coordinates)
