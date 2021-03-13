@@ -1,12 +1,12 @@
 from dearpygui.core import *
 import time
 
-straightLineCount = 0
+arrowCount = 0
 
-def straightLineTool(pad_name, lineColor, lineThickness):
-    print("\nStraight line tool initiated.")
+def arrowTool(pad_name, arrowColor, lineThickness, arrowSize):
+    print("\nArrow tool initiated.")
 
-    global straightLineCount    #Keeping a track of the number of straight lines
+    global arrowCount    #Keeping a track of the number of arrows
 
     time.sleep(0.1)
 
@@ -16,7 +16,7 @@ def straightLineTool(pad_name, lineColor, lineThickness):
 
             # If mouse is clicked outside the Drawing Pad, exit the tool.
             if get_active_window() != "Drawing Pad":
-                print("\nStraight line tool terminated.")
+                print("\nArrow tool terminated.")
                 return
 
             # Continue of clicked on the drawing pad
@@ -25,30 +25,30 @@ def straightLineTool(pad_name, lineColor, lineThickness):
 
             while True:
                 # Draw line
-                draw_line(pad_name, p1=mouse_position, p2=get_drawing_mouse_pos(), color=lineColor, thickness=lineThickness, tag=f"straightLine {straightLineCount}")
+                draw_arrow(pad_name, p1=mouse_position, p2=get_drawing_mouse_pos(), color=arrowColor, thickness=lineThickness, size=arrowSize, tag=f"arrow {arrowCount}")
                 time.sleep(0.01)
 
                 # Check if user wants to select the second point of the line
                 if is_mouse_button_released(mvMouseButton_Left):
                     # If the user clicks outside the drawing pad, it is assumed that they want to terminate the tool
                     if get_active_window() != "Drawing Pad":
-                        delete_draw_command(pad_name, f"straightLine {straightLineCount}")
-                        print("\nStraight line tool terminated.")
+                        delete_draw_command(pad_name, f"arrow {arrowCount}")
+                        print("\nArrow line tool terminated.")
                         return
 
-                    straightLineCount += 1
+                    arrowCount += 1
                     time.sleep(0.01)
                     return
 
                 # Check if user wants to exit the line tool
                 if is_mouse_button_released(mvMouseButton_Right):
-                    delete_draw_command(pad_name, f"straightLine {straightLineCount}")
+                    delete_draw_command(pad_name, f"arrow {arrowCount}")
                     return
 
                 # Check if user wants to exit the line tool
                 if is_key_released(mvKey_Escape):
-                    delete_draw_command(pad_name, f"straightLine {straightLineCount}")
+                    delete_draw_command(pad_name, f"arrow {arrowCount}")
                     return
 
                 # Delete the line drawn and begin the process again till user clicks the second point or exits the tool
-                delete_draw_command(pad_name, f"straightLine {straightLineCount}")
+                delete_draw_command(pad_name, f"arrow {arrowCount}")
