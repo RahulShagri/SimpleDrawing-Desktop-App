@@ -661,7 +661,7 @@ with window("SimpleDrawing Name", no_close=True, no_collapse=True, no_resize=Tru
     add_button("SimpleDrawing", callback=open_website, callback_data="https://github.com/RahulShagri/SimpleDrawing-Desktop-App")
 
 # Window to credit Dear PyGui
-with window("DPG", no_close=True, no_collapse=True, no_resize=True, no_title_bar=True, x_pos=320, y_pos=678,
+with window("DPG", no_close=True, no_collapse=True, no_resize=True, no_title_bar=True, x_pos=325, y_pos=678,
             no_move=True, height=25, width=155):
 
     set_item_color("DPG", color=[225, 225, 225], style=mvGuiCol_WindowBg)
