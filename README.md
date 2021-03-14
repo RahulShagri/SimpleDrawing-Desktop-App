@@ -5,15 +5,16 @@ A very basic desktop app built using DearPyGui framework for sketching purposes.
 <h3>Features include:</h3>
 
 1. Draw straight lines
-2. Draw poly lines
-3. Doodle
-4. Draw rectangles
-5. Draw circles
-6. Draw arrows
-7. Draw 4-point Bézier curves
-8. Change canvas background color
-9. Switch between dark and light mode
-10. Erase all drawn lines
+2. Draw straight dashed lines
+3. Draw poly lines
+4. Doodle
+5. Draw rectangles
+6. Draw circles
+7. Draw arrows
+8. Draw 4-point Bézier curves
+9. Change canvas background color
+10. Switch between dark and light mode
+11. Erase all drawn lines
 
 <H3>Instructions</H3>
 
