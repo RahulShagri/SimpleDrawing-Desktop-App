@@ -99,7 +99,7 @@ def tool_callbacks(caller_button):
             "\nthe tools from the column on the"
             "\nleft.",
             parent="Tool Specifications")
-        tools.resetPad("Drawing Pad")
+        tools.resetPad("Pad")
 
     if caller_button == "canvas color tool":
         # Setting up the properties column
