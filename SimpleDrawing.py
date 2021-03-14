@@ -171,7 +171,7 @@ def tool_callbacks(caller_button):
         polyline_specifications.add_space(count=2)
         polyline_specifications.add_separate()
         polyline_specifications.add_space(count=2)
-        add_checkbox("Close polyline", default_value=False, parent="tool properties", tip="")
+        add_checkbox("Close polyline", default_value=False, parent="tool properties")
 
         polyline_specifications.add_instructions(value="Left click on the drawing pad to set\n"
                                                        "the first point. Then left click to add\n"
@@ -290,17 +290,24 @@ def tool_callbacks(caller_button):
         # Setting up the properties column
         delete_item("Tool Specifications", children_only=True)
 
-        bezier_specifications = ToolSpec(title="            Bezier Tool Properties", height=100)
+        bezier_specifications = ToolSpec(title="            Bezier Tool Properties", height=150)
 
         add_input_int("Thickness", default_value=5, min_value=1, width=145, parent="tool properties")
         bezier_specifications.add_space(count=2)
         add_color_edit4("Color", default_value=[0, 255, 255, 255], parent="tool properties", width=170)
+        bezier_specifications.add_space(count=2)
+        bezier_specifications.add_separate()
+        bezier_specifications.add_space(count=2)
+        add_checkbox("Close bezier curve", default_value=False, parent="tool properties")
 
         bezier_specifications.add_instructions(value="Left click on the drawing pad to set\n"
                                                        "the first point. Then left click to add\n"
                                                        "three more points. Right click or hit\n"
                                                        "the escape key on the keyboard to\n"
-                                                       "end the tool.")
+                                                       "end the tool.\n\n"
+                                                     "If you have selected the \"Close bezier\n"
+                                                     "curve\" then the bezier curve will close\n"
+                                                     "when the third point is selected")
 
         set_item_callback("Apply", callback=apply_settings_dispatcher, callback_data="bezier tool")
         set_item_callback("Cancel", callback=apply_settings_dispatcher, callback_data="cancel tool")

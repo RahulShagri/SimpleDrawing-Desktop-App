@@ -47,6 +47,20 @@ def bezierTool(pad_name, lineColor, lineThickness):
                     bezier_points.append(point2)
 
                     if temp_polyline_count == 2:
+                        if get_value("Close bezier curve") == True:
+                            draw_bezier_curve(pad_name, p1=bezier_points[0], p2=bezier_points[1], p3=bezier_points[2],
+                                              p4=bezier_points[0], color=lineColor, thickness=lineThickness,
+                                              tag=f"bezier {bezier_count}")
+
+                            # Deleting reference poly-lines
+                            delete_draw_command(pad_name, f"temp_polyline {temp_polyline_count}")
+                            for count in range(temp_polyline_count):
+                                delete_draw_command(pad_name, f"temp_polyline {count}")
+
+                            bezier_count += 1
+
+                            return
+
                         while True:
                             point4 = get_drawing_mouse_pos()
 
