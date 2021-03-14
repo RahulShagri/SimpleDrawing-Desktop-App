@@ -43,11 +43,13 @@ def straightLineTool(pad_name, lineColor, lineThickness):
                 # Check if user wants to exit the line tool
                 if is_mouse_button_released(mvMouseButton_Right):
                     delete_draw_command(pad_name, f"straightLine {straightLineCount}")
+                    print("\nStraight line tool terminated.")
                     return
 
                 # Check if user wants to exit the line tool
                 if is_key_released(mvKey_Escape):
                     delete_draw_command(pad_name, f"straightLine {straightLineCount}")
+                    print("\nStraight line tool terminated.")
                     return
 
                 # Delete the line drawn and begin the process again till user clicks the second point or exits the tool
