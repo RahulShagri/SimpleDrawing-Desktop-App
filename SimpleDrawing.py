@@ -144,7 +144,7 @@ def tool_callbacks(caller_button):
 
         add_input_int("Thickness", default_value=5, min_value=1, width=145, parent="tool properties")
         dashedLine_specifications.add_space(count=2)
-        add_input_int("Spacing", default_value=5, min_value=1, width=145, parent="tool properties")
+        add_input_int("Spacing", default_value=30, min_value=1, width=145, parent="tool properties")
         dashedLine_specifications.add_space(count=2)
         add_color_edit4("Color", default_value=[0, 255, 255, 255], parent="tool properties", width=170)
 
@@ -457,6 +457,11 @@ def theme_switcher(sender):
             add_same_line(spacing=10)
             add_button("No##reset", width=150, height=25, callback=tool_callback_dispatcher)
 
+            set_item_style_var("Are you sure you want to erase the drawing pad?", style=mvGuiStyleVar_FrameBorderSize,
+                               value=[1])
+            set_item_style_var("Are you sure you want to erase the drawing pad?", style=mvGuiStyleVar_WindowRounding,
+                               value=[12])
+
     if sender == "light mode":
         delete_item("light mode")
         add_image_button(name="dark mode", value="icons/dark-mode.png", width=45, height=45, frame_padding=5,
@@ -679,6 +684,10 @@ with window("reset", no_collapse=True, no_resize=True, no_move=True, no_close=Tr
         add_button("Yes##reset", width=150, height=25, callback=tool_callback_dispatcher)
         add_same_line(spacing=10)
         add_button("No##reset", width=150, height=25, callback=tool_callback_dispatcher)
+
+        set_item_style_var("Are you sure you want to erase the drawing pad?", style=mvGuiStyleVar_FrameBorderSize, value=[1])
+        set_item_style_var("Are you sure you want to erase the drawing pad?", style=mvGuiStyleVar_WindowRounding,
+                           value=[12])
 
 # Tool Specifications window widget
 with window("Tool Specifications", no_collapse=True, no_resize=True, no_move=True, no_close=True, x_pos=80, y_pos=0,
