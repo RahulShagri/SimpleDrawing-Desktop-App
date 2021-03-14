@@ -27,33 +27,68 @@ def rectangleTool(pad_name, lineColor, lineThickness, edgeRounding, fillRectangl
 
             while True:
                 # Draw line
-                if get_drawing_mouse_pos()[0] < mouse_position[0]:
-                    # Check if in second quadrant
-                    if get_drawing_mouse_pos()[1] < mouse_position[1]:
-                        first_point = get_drawing_mouse_pos()
-                        second_point = mouse_position
+
+                # Checking quadrants because of imgui bug
+
+                # Check if user wants to constraint rectangle to square
+                if is_key_down(mvKey_Shift):
+                    if get_drawing_mouse_pos()[0] < mouse_position[0]:
+                        # Check if in second quadrant
+                        if get_drawing_mouse_pos()[1] < mouse_position[1]:
+                            first_point = [mouse_position[0] - (mouse_position[1] - get_drawing_mouse_pos()[1]), get_drawing_mouse_pos()[1]]
+                            second_point = mouse_position
+                            draw_rectangle(pad_name, pmin=first_point, pmax=second_point, color=lineColor,
+                                           thickness=lineThickness, rounding=edgeRounding, fill=fillRectangle,
+                                           tag=f"rectangle {rectangleCount}")
+                        # Check if in third quadrant
+                        else:
+                            first_point = [mouse_position[0] - (get_drawing_mouse_pos()[1] - mouse_position[1]), mouse_position[1]]
+                            second_point = [mouse_position[0], get_drawing_mouse_pos()[1]]
+                            draw_rectangle(pad_name, pmin=first_point, pmax=second_point, color=lineColor,
+                                           thickness=lineThickness, rounding=edgeRounding, fill=fillRectangle,
+                                           tag=f"rectangle {rectangleCount}")
+                    # Check if in first quadrant
+                    elif get_drawing_mouse_pos()[1] < mouse_position[1]:
+                        first_point = [mouse_position[0], get_drawing_mouse_pos()[1]]
+                        second_point = [mouse_position[0] + (mouse_position[1] - get_drawing_mouse_pos()[1]), mouse_position[1]]
                         draw_rectangle(pad_name, pmin=first_point, pmax=second_point, color=lineColor,
                                        thickness=lineThickness, rounding=edgeRounding, fill=fillRectangle,
                                        tag=f"rectangle {rectangleCount}")
-                    # Check if in third quadrant
+                    # Check if in fourth quadrant
                     else:
-                        first_point = [get_drawing_mouse_pos()[0], mouse_position[1]]
-                        second_point = [mouse_position[0], get_drawing_mouse_pos()[1]]
+                        draw_rectangle(pad_name, pmin=mouse_position, pmax=[mouse_position[0] + (get_drawing_mouse_pos()[1] - mouse_position[1]), get_drawing_mouse_pos()[1]], color=lineColor,
+                                       thickness=lineThickness, rounding=edgeRounding, fill=fillRectangle,
+                                       tag=f"rectangle {rectangleCount}")
+
+                # For creating rectangles
+                else:
+                    if get_drawing_mouse_pos()[0] < mouse_position[0]:
+                        # Check if in second quadrant
+                        if get_drawing_mouse_pos()[1] < mouse_position[1]:
+                            first_point = get_drawing_mouse_pos()
+                            second_point = mouse_position
+                            draw_rectangle(pad_name, pmin=first_point, pmax=second_point, color=lineColor,
+                                           thickness=lineThickness, rounding=edgeRounding, fill=fillRectangle,
+                                           tag=f"rectangle {rectangleCount}")
+                        # Check if in third quadrant
+                        else:
+                            first_point = [get_drawing_mouse_pos()[0], mouse_position[1]]
+                            second_point = [mouse_position[0], get_drawing_mouse_pos()[1]]
+                            draw_rectangle(pad_name, pmin=first_point, pmax=second_point, color=lineColor,
+                                           thickness=lineThickness, rounding=edgeRounding, fill=fillRectangle,
+                                           tag=f"rectangle {rectangleCount}")
+                    # Check if in first quadrant
+                    elif get_drawing_mouse_pos()[1] < mouse_position[1]:
+                        first_point = [mouse_position[0], get_drawing_mouse_pos()[1]]
+                        second_point = [get_drawing_mouse_pos()[0], mouse_position[1]]
                         draw_rectangle(pad_name, pmin=first_point, pmax=second_point, color=lineColor,
                                        thickness=lineThickness, rounding=edgeRounding, fill=fillRectangle,
                                        tag=f"rectangle {rectangleCount}")
-                # Check if in first quadrant
-                elif get_drawing_mouse_pos()[1] < mouse_position[1]:
-                    first_point = [mouse_position[0], get_drawing_mouse_pos()[1]]
-                    second_point = [get_drawing_mouse_pos()[0], mouse_position[1]]
-                    draw_rectangle(pad_name, pmin=first_point, pmax=second_point, color=lineColor,
-                                   thickness=lineThickness, rounding=edgeRounding, fill=fillRectangle,
-                                   tag=f"rectangle {rectangleCount}")
-                # Check if in fourth quadrant
-                else:
-                    draw_rectangle(pad_name, pmin=mouse_position, pmax=get_drawing_mouse_pos(), color=lineColor,
-                                   thickness=lineThickness, rounding=edgeRounding, fill=fillRectangle,
-                                   tag=f"rectangle {rectangleCount}")
+                    # Check if in fourth quadrant
+                    else:
+                        draw_rectangle(pad_name, pmin=mouse_position, pmax=get_drawing_mouse_pos(), color=lineColor,
+                                       thickness=lineThickness, rounding=edgeRounding, fill=fillRectangle,
+                                       tag=f"rectangle {rectangleCount}")
                 time.sleep(0.01)
                 line_flag = 1
 
