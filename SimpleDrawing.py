@@ -376,7 +376,6 @@ def theme_switcher(sender):
         set_item_color("Tool Specifications", color=[40, 40, 40], style=mvGuiCol_FrameBgActive)
         set_item_color("Tool Specifications", color=[80, 80, 80], style=mvGuiCol_ChildBg)
 
-        set_item_color("Drawing Pad", color=[95, 95, 95], style=mvGuiCol_WindowBg)
         set_item_color("Drawing Pad", color=[95, 95, 95], style=mvGuiCol_TitleBg)
         set_item_color("Drawing Pad", color=[95, 95, 95], style=mvGuiCol_TitleBgActive)
 
@@ -483,7 +482,6 @@ def theme_switcher(sender):
         set_item_color("Tool Specifications", color=[210, 210, 210], style=mvGuiCol_FrameBgActive)
         set_item_color("Tool Specifications", color=[250, 250, 250], style=mvGuiCol_ChildBg)
 
-        set_item_color("Drawing Pad", color=[255, 255, 255], style=mvGuiCol_WindowBg)
         set_item_color("Drawing Pad", color=[255, 255, 255], style=mvGuiCol_TitleBg)
         set_item_color("Drawing Pad", color=[255, 255, 255], style=mvGuiCol_TitleBgActive)
 
