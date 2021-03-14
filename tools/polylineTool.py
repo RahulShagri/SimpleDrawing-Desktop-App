@@ -1,5 +1,6 @@
 from dearpygui.core import *
 import time
+import math
 
 polyLine_count = 0
 
@@ -25,7 +26,44 @@ def polylineTool(pad_name, lineColor, lineThickness):
             while True:
                 # Draw line
                 point2 = get_drawing_mouse_pos()
-                draw_line(pad_name, p1=mouse_position, p2=point2, color=lineColor, thickness=lineThickness, tag=f"polyLine {polyLine_count}")
+                
+                if is_key_down(mvKey_Shift):
+                    angle = get_angle(mouse_position, get_drawing_mouse_pos())
+
+                    if angle>=0 and angle<=30:
+                        draw_line(pad_name, p1=mouse_position, p2=[get_drawing_mouse_pos()[0], mouse_position[1]], color=lineColor,
+                                  thickness=lineThickness, tag=f"polyLine {polyLine_count}")
+
+                        point2 = [get_drawing_mouse_pos()[0], mouse_position[1]]
+
+                    elif angle>30 and angle<=60:
+
+                        p2_Y = 0
+
+                        if (get_drawing_mouse_pos()[1] - mouse_position[1]) > 0:
+                            if (get_drawing_mouse_pos()[0] - mouse_position[0]) > 0:
+                                p2_Y = mouse_position[1] - (mouse_position[0] - get_drawing_mouse_pos()[0])
+                            else:
+                                p2_Y = mouse_position[1] + (mouse_position[0] - get_drawing_mouse_pos()[0])
+
+                        elif (get_drawing_mouse_pos()[1] - mouse_position[1]) < 0:
+                            if (get_drawing_mouse_pos()[0] - mouse_position[0]) > 0:
+                                p2_Y = mouse_position[1] + (mouse_position[0] - get_drawing_mouse_pos()[0])
+                            else:
+                                p2_Y = mouse_position[1] - (mouse_position[0] - get_drawing_mouse_pos()[0])
+
+                        draw_line(pad_name, p1=mouse_position, p2=[get_drawing_mouse_pos()[0], p2_Y], color=lineColor,
+                                  thickness=lineThickness, tag=f"polyLine {polyLine_count}")
+
+                        point2 = [get_drawing_mouse_pos()[0], p2_Y]
+
+                    elif angle>60 and angle<=90:
+                        draw_line(pad_name, p1=mouse_position, p2=[mouse_position[0], get_drawing_mouse_pos()[1]], color=lineColor,
+                                  thickness=lineThickness, tag=f"polyLine {polyLine_count}")
+
+                        point2 = [mouse_position[0], get_drawing_mouse_pos()[1]]
+                else:
+                    draw_line(pad_name, p1=mouse_position, p2=point2, color=lineColor, thickness=lineThickness, tag=f"polyLine {polyLine_count}")
 
                 time.sleep(0.01)
 
@@ -73,3 +111,11 @@ def polylineTool(pad_name, lineColor, lineThickness):
 
                 # Delete the line drawn and begin the process again till user clicks the second point or exits the tool
                 delete_draw_command(pad_name, f"polyLine {polyLine_count}")
+
+def get_angle(first_position, second_position):
+
+    if second_position[0] == first_position[0]:
+        return 0
+
+    else:
+        return abs(math.degrees(math.atan((second_position[1] - first_position[1]) / (second_position[0] - first_position[0]))))
