@@ -6,6 +6,8 @@ from tools.canvasColorTool import canvasColorTool
 
 from tools.straightLineTool import straightLineTool
 
+from tools.dashedLineTool import dashedLineTool
+
 from tools.polylineTool import polylineTool
 
 from tools.doodleTool import doodleTool
@@ -22,4 +24,4 @@ from tools.arrowTool import arrowTool
 
 from tools.bezierTool import bezierTool
 
-from tools.dashedLineTool import dashedLineTool
+from tools.textTool import textTool

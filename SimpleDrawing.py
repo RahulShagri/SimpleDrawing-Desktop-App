@@ -78,6 +78,9 @@ def apply_settings(sender, data):
     if data == "dashed line tool":
         tools.dashedLineTool("Pad", get_value("Color"), get_value("Thickness"), get_value("Spacing"))
 
+    if data == "text tool":
+        tools.textTool("Pad", get_value("Text"), get_value("Color"), get_value("Size"))
+
 # Setting up a new thread for running the tool scripts
 def apply_settings_dispatcher(sender, data):
     settings_thread = threading.Thread(name="toolSettingsCallbackThread", target=apply_settings, args=(sender, data,),
@@ -132,6 +135,29 @@ def tool_callbacks(caller_button):
 
         # Straight line main function call
         tools.straightLineTool("Pad", get_value("Color"), get_value("Thickness"))
+
+    if caller_button == "dashed line tool":
+        # Setting up the properties column
+        delete_item("Tool Specifications", children_only=True)
+
+        dashedLine_specifications = ToolSpec(title="          Dashed Line Tool Properties", height=130)
+
+        add_input_int("Thickness", default_value=5, min_value=1, width=145, parent="tool properties")
+        dashedLine_specifications.add_space(count=2)
+        add_input_int("Spacing", default_value=5, min_value=1, width=145, parent="tool properties")
+        dashedLine_specifications.add_space(count=2)
+        add_color_edit4("Color", default_value=[0, 255, 255, 255], parent="tool properties", width=170)
+
+        dashedLine_specifications.add_instructions(value="Left click on the drawing pad to set\n"
+                                                            "the first point. Then left click, right\n"
+                                                            "click or hit escape key to end the line\n"
+                                                            "tool.")
+
+        set_item_callback("Apply", callback=apply_settings_dispatcher, callback_data="dashed line tool")
+        set_item_callback("Cancel", callback=apply_settings_dispatcher, callback_data="cancel tool")
+
+        # Dashed line main function call
+        tools.dashedLineTool("Pad", get_value("Color"), get_value("Thickness"), get_value("Spacing"))
 
     if caller_button == "polyline tool":
         # Setting up the properties column
@@ -282,28 +308,31 @@ def tool_callbacks(caller_button):
         # Bezier main function call
         tools.bezierTool("Pad", get_value("Color"), get_value("Thickness"))
 
-    if caller_button == "dashed line tool":
+    if caller_button == "text tool":
         # Setting up the properties column
         delete_item("Tool Specifications", children_only=True)
 
-        dashedLine_specifications = ToolSpec(title="          Dashed Line Tool Properties", height=130)
+        text_specifications = ToolSpec(title="               Text Tool Properties", height=170)
 
-        add_input_int("Thickness", default_value=5, min_value=1, width=145, parent="tool properties")
-        dashedLine_specifications.add_space(count=2)
-        add_input_int("Spacing", default_value=5, min_value=1, width=145, parent="tool properties")
-        dashedLine_specifications.add_space(count=2)
+        add_input_text("Text", hint="Enter the text here", multiline=True, parent="tool properties", height=60, width=175)
+        text_specifications.add_space(count=2)
+        add_input_int("Size", default_value=40, min_value=1, width=145, parent="tool properties")
+        text_specifications.add_space(count=2)
         add_color_edit4("Color", default_value=[0, 255, 255, 255], parent="tool properties", width=170)
 
-        dashedLine_specifications.add_instructions(value="Left click on the drawing pad to set\n"
-                                                            "the first point. Then left click, right\n"
-                                                            "click or hit escape key to end the line\n"
-                                                            "tool.")
+        text_specifications.add_instructions(value="Left click on the canvas to initiate the\n"
+                                                   "text tool. When you are satisfied with\n"
+                                                   "the placement, left click again to\n"
+                                                   "place the text.\n\n"
+                                                   "Right clicking or pressing the escape\n"
+                                                   "key will terminate the text tool.")
 
-        set_item_callback("Apply", callback=apply_settings_dispatcher, callback_data="dashed line tool")
+        set_item_callback("Apply", callback=apply_settings_dispatcher, callback_data="text tool")
         set_item_callback("Cancel", callback=apply_settings_dispatcher, callback_data="cancel tool")
 
-        # Dashed line main function call
-        tools.dashedLineTool("Pad", get_value("Color"), get_value("Thickness"), get_value("Spacing"))
+        # Straight line main function call
+        tools.textTool("Pad", "Example Text", get_value("Color"), get_value("Size"))
+
 
 # Setting up a new thread for running the tool scripts
 def tool_callback_dispatcher(sender):
@@ -405,6 +434,9 @@ def theme_switcher(sender):
         add_spacing(count=1, parent="Tools")
         add_image_button(name="bezier tool", value="icons/dark-bezier-tool.png", width=45, height=45, frame_padding=5,
                          tip="Bezier tool", callback=tool_callback_dispatcher, parent="Tools")
+        add_spacing(count=1, parent="Tools")
+        add_image_button(name="text tool", value="icons/dark-text-tool.png", width=45, height=45, frame_padding=5,
+                         tip="Text tool", callback=tool_callback_dispatcher, parent="Tools")
 
         delete_item("reset", children_only=True)
 
@@ -511,6 +543,9 @@ def theme_switcher(sender):
         add_spacing(count=1, parent="Tools")
         add_image_button(name="bezier tool", value="icons/bezier-tool.png", width=45, height=45, frame_padding=5,
                          tip="Bezier tool", callback=tool_callback_dispatcher, parent="Tools")
+        add_spacing(count=1, parent="Tools")
+        add_image_button(name="text tool", value="icons/text-tool.png", width=45, height=45, frame_padding=5,
+                         tip="Text tool", callback=tool_callback_dispatcher, parent="Tools")
 
         delete_item("reset", children_only=True)
 
@@ -588,6 +623,9 @@ with window("Tools", no_collapse=True, no_resize=True, no_move=True, no_close=Tr
     add_spacing(count=1)
     add_image_button(name="bezier tool", value="icons/bezier-tool.png", width=45, height=45, frame_padding=5,
                      tip="Bezier tool", callback=tool_callback_dispatcher)
+    add_spacing(count=1)
+    add_image_button(name="text tool", value="icons/text-tool.png", width=45, height=45, frame_padding=5,
+                     tip="Text tool", callback=tool_callback_dispatcher)
 
 with window("miscTools", no_collapse=True, no_resize=True, no_move=True, no_close=True, x_pos=5, y_pos=460, width=70,
             height=140, no_title_bar=True):
