@@ -4,10 +4,11 @@ import time
 
 rectangleCount = 0
 
+
 def rectangleTool(pad_name, lineColor, lineThickness, edgeRounding, fillRectangle):
     print("\nRectangle tool initiated.")
 
-    global rectangleCount    #Keeping a track of the number of rectangles
+    global rectangleCount  # Keeping a track of the number of rectangles
 
     time.sleep(0.1)
 
@@ -26,7 +27,33 @@ def rectangleTool(pad_name, lineColor, lineThickness, edgeRounding, fillRectangl
 
             while True:
                 # Draw line
-                draw_rectangle(pad_name, pmin=mouse_position, pmax=get_drawing_mouse_pos(), color=lineColor, thickness=lineThickness, rounding=edgeRounding, fill=fillRectangle, tag=f"rectangle {rectangleCount}")
+                if get_drawing_mouse_pos()[0] < mouse_position[0]:
+                    # Check if in second quadrant
+                    if get_drawing_mouse_pos()[1] < mouse_position[1]:
+                        first_point = get_drawing_mouse_pos()
+                        second_point = mouse_position
+                        draw_rectangle(pad_name, pmin=first_point, pmax=second_point, color=lineColor,
+                                       thickness=lineThickness, rounding=edgeRounding, fill=fillRectangle,
+                                       tag=f"rectangle {rectangleCount}")
+                    # Check if in third quadrant
+                    else:
+                        first_point = [get_drawing_mouse_pos()[0], mouse_position[1]]
+                        second_point = [mouse_position[0], get_drawing_mouse_pos()[1]]
+                        draw_rectangle(pad_name, pmin=first_point, pmax=second_point, color=lineColor,
+                                       thickness=lineThickness, rounding=edgeRounding, fill=fillRectangle,
+                                       tag=f"rectangle {rectangleCount}")
+                # Check if in first quadrant
+                elif get_drawing_mouse_pos()[1] < mouse_position[1]:
+                    first_point = [mouse_position[0], get_drawing_mouse_pos()[1]]
+                    second_point = [get_drawing_mouse_pos()[0], mouse_position[1]]
+                    draw_rectangle(pad_name, pmin=first_point, pmax=second_point, color=lineColor,
+                                   thickness=lineThickness, rounding=edgeRounding, fill=fillRectangle,
+                                   tag=f"rectangle {rectangleCount}")
+                # Check if in fourth quadrant
+                else:
+                    draw_rectangle(pad_name, pmin=mouse_position, pmax=get_drawing_mouse_pos(), color=lineColor,
+                                   thickness=lineThickness, rounding=edgeRounding, fill=fillRectangle,
+                                   tag=f"rectangle {rectangleCount}")
                 time.sleep(0.01)
                 line_flag = 1
 
@@ -55,11 +82,13 @@ def rectangleTool(pad_name, lineColor, lineThickness, edgeRounding, fillRectangl
                 # Delete the line drawn and begin the process again till user clicks the second point or exits the tool
                 delete_draw_command(pad_name, f"rectangle {rectangleCount}")
 
+
 def fillRectangleCheckbox():
     if get_value("Fill rectangle"):
         set_item_height("tool properties", height=255)
         add_spacing(count=2, parent="tool properties", name="tempSpace1")
-        add_checkbox("Fill with same color", default_value=False, parent="tool properties", callback=fillRectangleSameCheckbox)
+        add_checkbox("Fill with same color", default_value=False, parent="tool properties",
+                     callback=fillRectangleSameCheckbox)
         add_spacing(count=2, parent="tool properties", name="tempSpace2")
         add_color_edit4("Fill color", default_value=[0, 255, 255, 255], parent="tool properties", width=155)
 
@@ -69,6 +98,7 @@ def fillRectangleCheckbox():
         delete_item("tempSpace2")
         delete_item("Fill color")
         set_item_height("tool properties", height=175)
+
 
 def fillRectangleSameCheckbox():
     if get_value("Fill with same color"):
