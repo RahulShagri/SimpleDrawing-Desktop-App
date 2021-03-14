@@ -41,9 +41,7 @@ def apply_settings(sender, data):
 
     if data == "canvas color tool":
         print('here')
-        delete_draw_command("Pad", "canvas background")
-        draw_rectangle("Pad", pmin=[0, 0], pmax=[1025, 629], color=get_value("Color"), fill=get_value("Color"), thickness=2,
-                       tag="canvas background")
+        tools.canvasColorTool("Pad", get_value("Color"))
 
     if data == "straight line tool":
         tools.straightLineTool("Pad", get_value("Color"), get_value("Thickness"))
@@ -77,6 +75,9 @@ def apply_settings(sender, data):
 
     if data == "bezier tool":
         tools.bezierTool("Pad", get_value("Color"), get_value("Thickness"))
+
+    if data == "dashed line tool":
+        tools.dashedLineTool("Pad", get_value("Color"), get_value("Thickness"), get_value("Spacing"))
 
 # Setting up a new thread for running the tool scripts
 def apply_settings_dispatcher(sender, data):
@@ -282,6 +283,29 @@ def tool_callbacks(caller_button):
         # Bezier main function call
         tools.bezierTool("Pad", get_value("Color"), get_value("Thickness"))
 
+    if caller_button == "dashed line tool":
+        # Setting up the properties column
+        delete_item("Tool Specifications", children_only=True)
+
+        dashedLine_specifications = ToolSpec(title="          Dashed Line Tool Properties", height=130)
+
+        add_input_int("Thickness", default_value=5, min_value=1, width=145, parent="tool properties")
+        dashedLine_specifications.add_space(count=2)
+        add_input_int("Spacing", default_value=5, min_value=1, width=145, parent="tool properties")
+        dashedLine_specifications.add_space(count=2)
+        add_color_edit4("Color", default_value=[0, 255, 255, 255], parent="tool properties", width=170)
+
+        dashedLine_specifications.add_instructions(value="Left click on the drawing pad to set\n"
+                                                            "the first point. Then left click, right\n"
+                                                            "click or hit escape key to end the line\n"
+                                                            "tool.")
+
+        set_item_callback("Apply", callback=apply_settings_dispatcher, callback_data="dashed line tool")
+        set_item_callback("Cancel", callback=apply_settings_dispatcher, callback_data="cancel tool")
+
+        # Dashed line main function call
+        tools.dashedLineTool("Pad", get_value("Color"), get_value("Thickness"), get_value("Spacing"))
+
 # Setting up a new thread for running the tool scripts
 def tool_callback_dispatcher(sender):
     tool_thread = threading.Thread(name="toolCallbackThread", target=tool_callbacks, args=(sender,), daemon=True)
@@ -361,6 +385,10 @@ def theme_switcher(sender):
 
         add_image_button(name="straight line tool", value="icons/dark-straight-line-tool.png", width=45, height=45,
                          frame_padding=5, tip="Straight line tool", callback=tool_callback_dispatcher, parent="Tools")
+        add_spacing(count=1)
+        add_image_button(name="dashed line tool", value="icons/dark-dashed-line-tool.png", width=45, height=45,
+                         frame_padding=5,
+                         tip="Dashed line tool", callback=tool_callback_dispatcher, parent="Tools")
         add_spacing(count=1, parent="Tools")
         add_image_button(name="polyline tool", value="icons/dark-polyline-tool.png", width=45, height=45, frame_padding=5,
                          tip="Polyline tool", callback=tool_callback_dispatcher, parent="Tools")
@@ -464,6 +492,10 @@ def theme_switcher(sender):
 
         add_image_button(name="straight line tool", value="icons/straight-line-tool.png", width=45, height=45,
                          frame_padding=5, tip="Straight line tool", callback=tool_callback_dispatcher, parent="Tools")
+        add_spacing(count=1)
+        add_image_button(name="dashed line tool", value="icons/dashed-line-tool.png", width=45, height=45,
+                         frame_padding=5,
+                         tip="Dashed line tool", callback=tool_callback_dispatcher, parent="Tools")
         add_spacing(count=1, parent="Tools")
         add_image_button(name="polyline tool", value="icons/polyline-tool.png", width=45, height=45, frame_padding=5,
                          tip="Polyline tool", callback=tool_callback_dispatcher, parent="Tools")
@@ -538,6 +570,9 @@ with window("Tools", no_collapse=True, no_resize=True, no_move=True, no_close=Tr
     # General sketching tool buttons
     add_image_button(name="straight line tool", value="icons/straight-line-tool.png", width=45, height=45,
                      frame_padding=5, tip="Straight line tool", callback=tool_callback_dispatcher)
+    add_spacing(count=1)
+    add_image_button(name="dashed line tool", value="icons/dashed-line-tool.png", width=45, height=45, frame_padding=5,
+                     tip="Dashed line tool", callback=tool_callback_dispatcher)
     add_spacing(count=1)
     add_image_button(name="polyline tool", value="icons/polyline-tool.png", width=45, height=45, frame_padding=5,
                      tip="Polyline tool", callback=tool_callback_dispatcher)

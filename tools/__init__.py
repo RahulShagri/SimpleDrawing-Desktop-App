@@ -2,6 +2,8 @@
 
 from tools.resetPad import resetPad
 
+from tools.canvasColorTool import canvasColorTool
+
 from tools.straightLineTool import straightLineTool
 
 from tools.polylineTool import polylineTool
@@ -19,3 +21,5 @@ from tools.circleTool import fillSameCircleCheckbox
 from tools.arrowTool import arrowTool
 
 from tools.bezierTool import bezierTool
+
+from tools.dashedLineTool import dashedLineTool
