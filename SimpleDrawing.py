@@ -40,8 +40,7 @@ def apply_settings(sender, data):
                  parent="Tool Specifications")
 
     if data == "canvas color tool":
-        print('here')
-        tools.canvasColorTool("Pad", get_value("Color"))
+        tools.canvasColorTool("Drawing Pad", get_value("Color"))
 
     if data == "straight line tool":
         tools.straightLineTool("Pad", get_value("Color"), get_value("Thickness"))
@@ -670,7 +669,6 @@ with window("Drawing Pad", no_close=True, no_collapse=True, no_resize=True, x_po
 
     # Adding drawing canvas
     add_drawing("Pad", height=629, width=1025)
-    draw_rectangle("Pad", pmin=[0, 0], pmax=[1025, 629], color=[255, 255, 255], fill=[255, 255, 255], thickness=2, tag="canvas background")
 
 # Window to display mouse coordinates
 with window("Mouse Pad Coordinates", no_close=True, no_collapse=True, no_resize=True, no_title_bar=True, x_pos=1130,
