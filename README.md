@@ -12,9 +12,11 @@ A very basic desktop app built using DearPyGui framework for sketching purposes.
 6. Draw circles
 7. Draw arrows
 8. Draw 4-point Bézier curves
-9. Change canvas background color
-10. Switch between dark and light mode
-11. Erase all drawn lines
+9. Constraint lines to horizontal, vertical, or 45&deg; by holding down shift key
+10. Constraint rectangles to squares by holding down shift key
+11. Change canvas color
+12. Switch between dark and light mode
+13. Erase all drawn lines
 
 <H3>Instructions</H3>
 
