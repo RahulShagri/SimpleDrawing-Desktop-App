@@ -18,6 +18,7 @@ A very basic desktop app built using DearPyGui framework for sketching purposes.
 12. Change canvas color
 13. Switch between dark and light mode
 14. Erase all drawn lines
+15. Save drawing as a jpg, png, or pdf file
 
 <H3>Instructions</H3>
 
