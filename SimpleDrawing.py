@@ -5,6 +5,8 @@ from dearpygui.simple import *
 # Import additional modules
 import threading
 import webbrowser
+import pyautogui
+import win32gui, win32con
 
 # Import tool scripts
 import tools
@@ -28,9 +30,9 @@ def pad_mouse_coordinates():
     mouse_y = get_drawing_mouse_pos()[1]
 
     draw_line("Pad", p1=[mouse_x - 15, mouse_y], p2=[mouse_x + 15, mouse_y], color=[100, 100, 100], thickness=2,
-              tag=f"cursorX")
+              tag="cursorX")
     draw_line("Pad", p1=[mouse_x, mouse_y - 15], p2=[mouse_x, mouse_y + 15], color=[100, 100, 100], thickness=2,
-              tag=f"cursorY")
+              tag="cursorY")
 
 # Running tool scrips again after user is satisfied with their settings
 def apply_settings(sender, data):
@@ -358,6 +360,7 @@ def theme_switcher(sender):
         set_theme_item(mvGuiCol_Border, 160, 160, 160, 70)
 
         set_item_color("Main Window", color=[55, 55, 55], style=mvGuiCol_WindowBg)
+        set_item_color("Main Window", color=[55, 55, 55], style=mvGuiCol_MenuBarBg)
 
         set_item_color("Tools", color=[40, 40, 40], style=mvGuiCol_WindowBg)
         set_item_color("Tools", color=[50, 50, 50], style=mvGuiCol_TitleBg)
@@ -472,6 +475,7 @@ def theme_switcher(sender):
         set_theme_item(mvGuiCol_Border, 100, 100, 100, 70)
 
         set_item_color("Main Window", color=[225, 225, 225], style=mvGuiCol_WindowBg)
+        set_item_color("Main Window", color=[225, 225, 225], style=mvGuiCol_MenuBarBg)
 
         set_item_color("Tools", color=[200, 200, 200], style=mvGuiCol_WindowBg)
         set_item_color("Tools", color=[225, 225, 225], style=mvGuiCol_TitleBg)
@@ -577,16 +581,16 @@ with window("Main Window"):
     set_main_window_title("SimpleDrawing")
     set_main_window_pos(x=0, y=0)
     set_main_window_size(width=1370, height=740)
+    set_main_window_resizable(False)
     add_additional_font("fonts/OpenSans-Regular.ttf", 18)
 
-    # set_style_window_padding(0.00, 0.00)
-    set_style_item_spacing(0.00, 5.00)
+    set_style_item_spacing(20.00, 5.00)
     set_style_item_inner_spacing(0.00, 0.00)
     set_style_touch_extra_padding(0.00, 0.00)
     set_style_window_border_size(0.00)
     set_style_window_rounding(0.00)
     set_style_window_title_align(0.50, 0.50)
-    set_style_window_padding(8, 8)
+    set_style_window_padding(20, 5)
     set_style_frame_border_size(1.0)
 
     # Main Window colors
@@ -594,9 +598,13 @@ with window("Main Window"):
     set_theme_item(mvGuiCol_Border, 100, 100, 100, 70)
     set_item_color("Main Window", color=[225, 225, 225], style=mvGuiCol_WindowBg)
 
+    with menu_bar("Main menu bar"):
+        with menu("File"):
+            add_menu_item("Save drawing", callback=tools.saveImageTool)
+
 # Tools window widget
-with window("Tools", no_collapse=True, no_resize=True, no_move=True, no_close=True, x_pos=0, y_pos=0, width=80,
-            height=450): #1370
+with window("Tools", no_collapse=True, no_resize=True, no_move=True, no_close=True, x_pos=0, y_pos=25, width=80,
+            height=425): #1370
     # Tool Bar window styling
     set_item_color("Tools", color=[200, 200, 200], style=mvGuiCol_WindowBg)
     set_item_color("Tools", color=[225, 225, 225], style=mvGuiCol_TitleBg)
@@ -610,6 +618,7 @@ with window("Tools", no_collapse=True, no_resize=True, no_move=True, no_close=Tr
     set_item_style_var("Tools", style=mvGuiStyleVar_FrameRounding, value=[12])
     set_item_style_var("Tools", style=mvGuiStyleVar_ScrollbarSize,value=[10])
     set_item_style_var("Tools", style=mvGuiStyleVar_WindowBorderSize, value=[1])
+    set_item_style_var("Tools", style=mvGuiStyleVar_WindowPadding, value=[8, 8])
 
     # General sketching tool buttons
     add_image_button(name="straight line tool", value="icons/straight-line-tool.png", width=45, height=45,
@@ -653,6 +662,7 @@ with window("miscTools", no_collapse=True, no_resize=True, no_move=True, no_clos
     set_item_style_var("miscTools", style=mvGuiStyleVar_FrameRounding, value=[12])
     set_item_style_var("miscTools", style=mvGuiStyleVar_ScrollbarSize,value=[10])
     set_item_style_var("miscTools", style=mvGuiStyleVar_WindowBorderSize, value=[1])
+    set_item_style_var("miscTools", style=mvGuiStyleVar_WindowPadding, value=[8, 8])
 
     add_image_button(name="canvas color tool", value="icons/canvas-color-tool.png", width=45, height=45, frame_padding=5,
                      tip="Change canvas color", callback=tool_callback_dispatcher)
@@ -675,6 +685,7 @@ with window("reset", no_collapse=True, no_resize=True, no_move=True, no_close=Tr
     set_item_style_var("reset", style=mvGuiStyleVar_ScrollbarSize,value=[10])
     set_item_style_var("reset", style=mvGuiStyleVar_WindowBorderSize, value=[0])
     set_item_style_var("reset", style=mvGuiStyleVar_FrameBorderSize, value=[0])
+    set_item_style_var("reset", style=mvGuiStyleVar_WindowPadding, value=[8, 8])
 
     add_image_button(name="reset tool", value="icons/reset-tool.png", width=45, height=45, frame_padding=5,
                      tip="Reset entire drawing pad")
@@ -690,8 +701,8 @@ with window("reset", no_collapse=True, no_resize=True, no_move=True, no_close=Tr
                            value=[12])
 
 # Tool Specifications window widget
-with window("Tool Specifications", no_collapse=True, no_resize=True, no_move=True, no_close=True, x_pos=80, y_pos=0,
-            width=245, height=669):
+with window("Tool Specifications", no_collapse=True, no_resize=True, no_move=True, no_close=True, x_pos=80, y_pos=25,
+            width=245, height=644):
     # Tool Specifications window styling
     set_item_color("Tool Specifications", color=[240, 240, 240], style=mvGuiCol_WindowBg)
     set_item_color("Tool Specifications", color=[240, 240, 240], style=mvGuiCol_TitleBg)
@@ -708,25 +719,32 @@ with window("Tool Specifications", no_collapse=True, no_resize=True, no_move=Tru
     set_item_style_var("Tool Specifications", style=mvGuiStyleVar_FrameRounding, value=[2.0])
     set_item_style_var("Tool Specifications", style=mvGuiStyleVar_ChildBorderSize, value=[1])
     set_item_style_var("Tool Specifications", style=mvGuiStyleVar_ChildRounding, value=[5])
+    set_item_style_var("Tool Specifications", style=mvGuiStyleVar_WindowPadding, value=[8, 8])
 
     add_text("To get started, please select one of\nthe tools from the column on the\nleft.")
 
 # ----Drawing Pad window widget----#
-with window("Drawing Pad", no_close=True, no_collapse=True, no_resize=True, x_pos=325, y_pos=0, autosize=True,
+with window("Drawing Pad", no_close=True, no_collapse=True, no_resize=True, x_pos=325, y_pos=25, autosize=True,
             no_move=True):
     # Drawing Pad window styling
     set_item_color("Drawing Pad", color=[255, 255, 255], style=mvGuiCol_WindowBg)
     set_item_color("Drawing Pad", color=[255, 255, 255], style=mvGuiCol_TitleBg)
     set_item_color("Drawing Pad", color=[255, 255, 255], style=mvGuiCol_TitleBgActive)
 
+    set_item_style_var("Drawing Pad", style=mvGuiStyleVar_WindowPadding, value=[8, 8])
+
     # Adding drawing canvas
-    add_drawing("Pad", height=629, width=1025)
+    add_drawing("Pad", height=604, width=1025)
 
 # Window to display mouse coordinates
 with window("Mouse Pad Coordinates", no_close=True, no_collapse=True, no_resize=True, no_title_bar=True, x_pos=1130,
             y_pos=670, no_move=True, height=50, width=250):
     set_item_color("Mouse Pad Coordinates", color=[225, 225, 225], style=mvGuiCol_WindowBg)
     set_item_color("Mouse Pad Coordinates", color=[100, 100, 100], style=mvGuiCol_Text)
+
+    set_item_style_var("Mouse Pad Coordinates", style=mvGuiStyleVar_WindowPadding, value=[8, 8])
+
+
     add_text("Mouse coordinates:")
 
 # Window to display SimpleDrawing version number
@@ -758,6 +776,7 @@ with window("DPG", no_close=True, no_collapse=True, no_resize=True, no_title_bar
     set_item_style_var("DPG", style=mvGuiStyleVar_FrameBorderSize, value=[0])
     set_item_style_var("DPG", style=mvGuiStyleVar_WindowPadding, value=[0, 0])
     set_item_style_var("DPG", style=mvGuiStyleVar_FramePadding, value=[0, 0])
+
 
     add_button("Powered by Dear PyGui", callback=open_website, callback_data="https://github.com/hoffstadt/DearPyGui")
 

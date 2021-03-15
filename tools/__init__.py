@@ -2,6 +2,8 @@
 
 from tools.resetPad import resetPad
 
+from tools.saveImageTool import saveImageTool
+
 from tools.canvasColorTool import canvasColorTool
 
 from tools.straightLineTool import straightLineTool
