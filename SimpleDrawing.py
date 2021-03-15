@@ -600,7 +600,7 @@ with window("Main Window"):
 
     with menu_bar("Main menu bar"):
         with menu("File"):
-            add_menu_item("Save drawing", callback=tools.saveImageTool)
+            add_menu_item("Save drawing", callback=tools.saveImageTool, shortcut='Ctrl + S')
 
 # Tools window widget
 with window("Tools", no_collapse=True, no_resize=True, no_move=True, no_close=True, x_pos=0, y_pos=25, width=80,
@@ -781,6 +781,7 @@ with window("DPG", no_close=True, no_collapse=True, no_resize=True, no_title_bar
     add_button("Powered by Dear PyGui", callback=open_website, callback_data="https://github.com/hoffstadt/DearPyGui")
 
 set_mouse_move_callback(pad_mouse_coordinates)
+set_key_down_callback(tools.hotkeyCommands)
 
 # Start app
 start_dearpygui(primary_window="Main Window")

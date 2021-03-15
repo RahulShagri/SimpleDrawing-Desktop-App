@@ -1,5 +1,7 @@
 #-----Complete package with all tools used by SimpleDrawing-----#
 
+from tools.hotkeyTool import hotkeyCommands
+
 from tools.resetPad import resetPad
 
 from tools.saveImageTool import saveImageTool
