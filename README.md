@@ -19,6 +19,8 @@ A very basic desktop app built using DearPyGui framework for sketching purposes.
 13. Switch between dark and light mode
 14. Erase all drawn lines
 15. Save drawing as a jpg, png, or pdf file
+16. Save drawing as a database file that can be opened and edited
+17. Undo and redo all tools used
 
 <H3>Instructions</H3>
 
