@@ -1,6 +1,4 @@
-import pyautogui
-import win32gui, win32con
-import time
+import win32gui
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 import os
@@ -21,10 +19,8 @@ def openTool():
     Tk().withdraw()
 
     hwnd = win32gui.FindWindow(None, "SimpleDrawing")
-    win32gui.SetForegroundWindow(hwnd)
 
-    file_path = askopenfilename(title="SimpleDrawing save image window",
-                                initialfile="New SimpleDrawing",
+    file_path = askopenfilename(title="SimpleDrawing open drawing window",
                                 filetypes=[("SimpleDrawing File (*.db)", "*.db")],
                                 defaultextension=[("SimpleDrawing File (*.db)", "*.db")])
 
