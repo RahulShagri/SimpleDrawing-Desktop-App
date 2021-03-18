@@ -1,0 +1,9 @@
+straight_line_count = 1
+dashed_line_count = 1
+polyline_count = 1
+doodle_count = 1
+rectangle_count = 1
+circle_count = 1
+arrow_count = 1
+bezier_count = 1
+text_count = 1

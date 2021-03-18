@@ -1,12 +1,8 @@
 from dearpygui.core import *
 import time
-
-line_count = 0
+from db_manage import *
 
 def doodleTool(pad_name, lineColor, lineThickness):
-    print("\nDoodle tool initiated.")
-
-    global line_count
 
     time.sleep(0.1)
 
@@ -15,7 +11,6 @@ def doodleTool(pad_name, lineColor, lineThickness):
 
             # If mouse is clicked outside the Drawing Pad, exit the tool.
             if get_active_window() != "Drawing Pad":
-                print("\nDoodle line tool terminated.")
                 return
 
             # Continue of clicked on the pad_name
@@ -27,28 +22,25 @@ def doodleTool(pad_name, lineColor, lineThickness):
             while True:
                 # Draw line
                 doodleCoordinates.append(get_drawing_mouse_pos())
-                draw_polyline(pad_name, points=doodleCoordinates, color=lineColor, thickness=lineThickness, tag=f"doodle {line_count}")
+                draw_polyline(pad_name, points=doodleCoordinates, color=lineColor, thickness=lineThickness, tag=f"doodle {tools.doodle_count}")
 
                 time.sleep(0.01)
 
                 # Check if user wants to exit the line tool
                 if is_mouse_button_released(mvMouseButton_Left):
-                    line_count += 1
+                    write_db(tool="doodle tool", point_1=str(doodleCoordinates), color=str(lineColor), thickness=lineThickness, tag=f"doodle {tools.doodle_count}")
+                    tools.doodle_count += 1
                     time.sleep(0.01)
-                    print("\nDoodle line tool terminated.")
                     return
 
                 # Check if user wants to exit the line tool
                 if is_mouse_button_released(mvMouseButton_Right):
-                    delete_draw_command(pad_name, f"doodle {line_count}")
-                    print("\nDoodle line tool terminated.")
+                    delete_draw_command(pad_name, f"doodle {tools.doodle_count}")
                     return
 
                 # Check if user wants to exit the line tool
                 if is_key_released(mvKey_Escape):
-                    delete_draw_command(pad_name, f"doodle {line_count}")
-                    print("\nDoodle line tool terminated.")
+                    delete_draw_command(pad_name, f"doodle {tools.doodle_count}")
                     return
 
-                # Delete the line drawn and begin the process again till user clicks the second point or exits the tool
-                line_count += 1
+                delete_draw_command(pad_name, f"doodle {tools.doodle_count}")

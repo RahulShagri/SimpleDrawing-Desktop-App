@@ -1,8 +1,8 @@
 from dearpygui.core import *
 import time
 import math
+from db_manage import  *
 
-dashedLineCount = 0
 
 def draw_dashed_line(drawing: str, p1: list[float], p2: list[float], color: list[float], thickness: int, spacing: int, tag: str):
     # Handling Horizontal lines
@@ -127,9 +127,6 @@ def clear_dashed_line(drawing: str, tag: str):
         delete_draw_command(drawing=drawing, tag=f"{tag} {line}")
 
 def dashedLineTool(pad_name, lineColor, lineThickness, lineSpacing):
-    print("\nDashed line tool initiated.")
-
-    global dashedLineCount    #Keeping a track of the number of dashed lines
 
     time.sleep(0.1)
 
@@ -139,7 +136,6 @@ def dashedLineTool(pad_name, lineColor, lineThickness, lineSpacing):
 
             # If mouse is clicked outside the Drawing Pad, exit the tool.
             if get_active_window() != "Drawing Pad":
-                print("\nDashed line tool terminated.")
                 return
 
             # Continue of clicked on the drawing pad
@@ -148,72 +144,70 @@ def dashedLineTool(pad_name, lineColor, lineThickness, lineSpacing):
 
             while True:
                 # Draw line
-
+                point2 = get_drawing_mouse_pos()
                 if is_key_down(mvKey_Shift):
-                    angle = get_angle(mouse_position, get_drawing_mouse_pos())
+                    angle = get_angle(mouse_position, point2)
 
                     if angle>=0 and angle<=30:
-                        draw_dashed_line(drawing=pad_name, p1=mouse_position, p2=[get_drawing_mouse_pos()[0], mouse_position[1]],
+                        draw_dashed_line(drawing=pad_name, p1=mouse_position, p2=[point2[0], mouse_position[1]],
                                          color=lineColor, thickness=lineThickness, spacing=lineSpacing,
-                                         tag=f"dashedLine {dashedLineCount}")
+                                         tag=f"dashedLine {tools.dashed_line_count}")
 
 
                     elif angle>30 and angle<=60:
 
                         p2_Y = 0
 
-                        if (get_drawing_mouse_pos()[1] - mouse_position[1]) > 0:
-                            if (get_drawing_mouse_pos()[0] - mouse_position[0]) > 0:
-                                p2_Y = mouse_position[1] - (mouse_position[0] - get_drawing_mouse_pos()[0])
+                        if (point2[1] - mouse_position[1]) > 0:
+                            if (point2[0] - mouse_position[0]) > 0:
+                                p2_Y = mouse_position[1] - (mouse_position[0] - point2[0])
                             else:
-                                p2_Y = mouse_position[1] + (mouse_position[0] - get_drawing_mouse_pos()[0])
+                                p2_Y = mouse_position[1] + (mouse_position[0] - point2[0])
 
-                        elif (get_drawing_mouse_pos()[1] - mouse_position[1]) < 0:
-                            if (get_drawing_mouse_pos()[0] - mouse_position[0]) > 0:
-                                p2_Y = mouse_position[1] + (mouse_position[0] - get_drawing_mouse_pos()[0])
+                        elif (point2[1] - mouse_position[1]) < 0:
+                            if (point2[0] - mouse_position[0]) > 0:
+                                p2_Y = mouse_position[1] + (mouse_position[0] - point2[0])
                             else:
-                                p2_Y = mouse_position[1] - (mouse_position[0] - get_drawing_mouse_pos()[0])
+                                p2_Y = mouse_position[1] - (mouse_position[0] - point2[0])
 
                         draw_dashed_line(drawing=pad_name, p1=mouse_position,
-                                         p2=[get_drawing_mouse_pos()[0], p2_Y],
+                                         p2=[point2[0], p2_Y],
                                          color=lineColor, thickness=lineThickness, spacing=lineSpacing,
-                                         tag=f"dashedLine {dashedLineCount}")
+                                         tag=f"dashedLine {tools.dashed_line_count}")
 
                     elif angle>60 and angle<=90:
                         draw_dashed_line(drawing=pad_name, p1=mouse_position,
-                                         p2=[mouse_position[0], get_drawing_mouse_pos()[1]],
+                                         p2=[mouse_position[0], point2[1]],
                                          color=lineColor, thickness=lineThickness, spacing=lineSpacing,
-                                         tag=f"dashedLine {dashedLineCount}")
+                                         tag=f"dashedLine {tools.dashed_line_count}")
                 else:
-                    draw_dashed_line(drawing=pad_name, p1=mouse_position, p2=get_drawing_mouse_pos(), color=lineColor, thickness=lineThickness, spacing=lineSpacing, tag=f"dashedLine {dashedLineCount}")
+                    draw_dashed_line(drawing=pad_name, p1=mouse_position, p2=point2, color=lineColor, thickness=lineThickness, spacing=lineSpacing, tag=f"dashedLine {tools.dashed_line_count}")
                 time.sleep(0.01)
 
                 # Check if user wants to select the second point of the line
                 if is_mouse_button_released(mvMouseButton_Left):
                     # If the user clicks outside the drawing pad, it is assumed that they want to terminate the tool
                     if get_active_window() != "Drawing Pad":
-                        clear_dashed_line(pad_name, f"dashedLine {dashedLineCount}")
-                        print("\nDashed line tool terminated.")
+                        clear_dashed_line(pad_name, f"dashedLine {tools.dashed_line_count}")
                         return
 
-                    dashedLineCount += 1
+                    write_db(tool="dashed line tool", point_1=str(mouse_position), point_2=str(point2), color=str(lineColor), thickness=lineThickness, spacing=lineSpacing, tag=f"dashedLine {tools.dashed_line_count}")
+                    tools.dashed_line_count += 1
                     time.sleep(0.01)
                     return
 
                 # Check if user wants to exit the line tool
                 if is_mouse_button_released(mvMouseButton_Right):
-                    clear_dashed_line(pad_name, f"dashedLine {dashedLineCount}")
-                    print("\nDashed line tool terminated.")
+                    clear_dashed_line(pad_name, f"dashedLine {tools.dashed_line_count}")
                     return
 
                 # Check if user wants to exit the line tool
                 if is_key_released(mvKey_Escape):
-                    clear_dashed_line(pad_name, f"dashedLine {dashedLineCount}")
-                    print("\nDashed line tool terminated.")
+                    clear_dashed_line(pad_name, f"dashedLine {tools.dashed_line_count}")
                     return
 
                 # Delete the line drawn and begin the process again till user clicks the second point or exits the tool
-                clear_dashed_line(pad_name, f"dashedLine {dashedLineCount}")
+                clear_dashed_line(pad_name, f"dashedLine {tools.dashed_line_count}")
 
 def get_angle(first_position, second_position):
 

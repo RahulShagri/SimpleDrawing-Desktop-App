@@ -3,12 +3,9 @@ from dearpygui.simple import *
 import math
 import time
 
-circleCount = 0
+from db_manage import *
 
 def circleTool(pad_name, lineColor, lineThickness, fillCircle):
-    print("\nCircle tool initiated.")
-
-    global circleCount    #Keeping a track of the number of circles
 
     time.sleep(0.1)
 
@@ -18,7 +15,6 @@ def circleTool(pad_name, lineColor, lineThickness, fillCircle):
 
             # If mouse is clicked outside the Drawing Pad, exit the tool.
             if get_active_window() != "Drawing Pad":
-                print("\nCircle tool terminated.")
                 return
 
             # Continue of clicked on the drawing pad
@@ -28,34 +24,36 @@ def circleTool(pad_name, lineColor, lineThickness, fillCircle):
             while True:
                 # Draw line
                 radius = math.sqrt(math.pow(mouse_position[0] - get_drawing_mouse_pos()[0], 2) + math.pow(mouse_position[1] - get_drawing_mouse_pos()[1], 2))
-                draw_circle(pad_name, center=mouse_position, radius=radius, color=lineColor, thickness=lineThickness, fill=fillCircle, tag=f"circle {circleCount}")
+                draw_circle(pad_name, center=mouse_position, radius=radius, color=lineColor, thickness=lineThickness, fill=fillCircle, tag=f"circle {tools.circle_count}")
                 time.sleep(0.01)
-                line_flag = 1
 
                 # Check if user wants to select the second point
                 if is_mouse_button_released(mvMouseButton_Left):
                     # If the user clicks outside the drawing pad, it is assumed that they want to terminate the tool
                     if get_active_window() != "Drawing Pad":
-                        delete_draw_command(pad_name, f"circle {circleCount}")
-                        print("\nCircle tool terminated.")
+                        delete_draw_command(pad_name, f"circle {tools.circle_count}")
                         return
 
-                    circleCount += 1
+                    write_db(tool="circle tool", point_1=str(mouse_position), point_2=str(radius),
+                             color=str(lineColor), thickness=lineThickness, fill=str(fillCircle),
+                             tag=f"circle {tools.circle_count}")
+
+                    tools.circle_count += 1
                     time.sleep(0.01)
                     return
 
                 # Check if user wants to exit the line tool
                 if is_mouse_button_released(mvMouseButton_Right):
-                    delete_draw_command(pad_name, f"circle {circleCount}")
+                    delete_draw_command(pad_name, f"circle {tools.circle_count}")
                     return
 
                 # Check if user wants to exit the line tool
                 if is_key_released(mvKey_Escape):
-                    delete_draw_command(pad_name, f"circle {circleCount}")
+                    delete_draw_command(pad_name, f"circle {tools.circle_count}")
                     return
 
                 # Delete the line drawn and begin the process again till user clicks the second point or exits the tool
-                delete_draw_command(pad_name, f"circle {circleCount}")
+                delete_draw_command(pad_name, f"circle {tools.circle_count}")
 
 def fillCircleCheckbox():
     if get_value("Fill circle"):

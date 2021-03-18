@@ -1,14 +1,10 @@
 from dearpygui.core import *
 from dearpygui.simple import *
 import time
-
-rectangleCount = 0
+from db_manage import *
 
 
 def rectangleTool(pad_name, lineColor, lineThickness, edgeRounding, fillRectangle):
-    print("\nRectangle tool initiated.")
-
-    global rectangleCount  # Keeping a track of the number of rectangles
 
     time.sleep(0.1)
 
@@ -18,7 +14,6 @@ def rectangleTool(pad_name, lineColor, lineThickness, edgeRounding, fillRectangl
 
             # If mouse is clicked outside the Drawing Pad, exit the tool.
             if get_active_window() != "Drawing Pad":
-                print("\nRectangle tool terminated.")
                 return
 
             # Continue of clicked on the drawing pad
@@ -39,26 +34,28 @@ def rectangleTool(pad_name, lineColor, lineThickness, edgeRounding, fillRectangl
                             second_point = mouse_position
                             draw_rectangle(pad_name, pmin=first_point, pmax=second_point, color=lineColor,
                                            thickness=lineThickness, rounding=edgeRounding, fill=fillRectangle,
-                                           tag=f"rectangle {rectangleCount}")
+                                           tag=f"rectangle {tools.rectangle_count}")
                         # Check if in third quadrant
                         else:
                             first_point = [mouse_position[0] - (get_drawing_mouse_pos()[1] - mouse_position[1]), mouse_position[1]]
                             second_point = [mouse_position[0], get_drawing_mouse_pos()[1]]
                             draw_rectangle(pad_name, pmin=first_point, pmax=second_point, color=lineColor,
                                            thickness=lineThickness, rounding=edgeRounding, fill=fillRectangle,
-                                           tag=f"rectangle {rectangleCount}")
+                                           tag=f"rectangle {tools.rectangle_count}")
                     # Check if in first quadrant
                     elif get_drawing_mouse_pos()[1] < mouse_position[1]:
                         first_point = [mouse_position[0], get_drawing_mouse_pos()[1]]
                         second_point = [mouse_position[0] + (mouse_position[1] - get_drawing_mouse_pos()[1]), mouse_position[1]]
                         draw_rectangle(pad_name, pmin=first_point, pmax=second_point, color=lineColor,
                                        thickness=lineThickness, rounding=edgeRounding, fill=fillRectangle,
-                                       tag=f"rectangle {rectangleCount}")
+                                       tag=f"rectangle {tools.rectangle_count}")
                     # Check if in fourth quadrant
                     else:
-                        draw_rectangle(pad_name, pmin=mouse_position, pmax=[mouse_position[0] + (get_drawing_mouse_pos()[1] - mouse_position[1]), get_drawing_mouse_pos()[1]], color=lineColor,
+                        first_point = mouse_position
+                        second_point = [mouse_position[0] + (get_drawing_mouse_pos()[1] - mouse_position[1]), get_drawing_mouse_pos()[1]]
+                        draw_rectangle(pad_name, pmin=mouse_position, pmax=second_point, color=lineColor,
                                        thickness=lineThickness, rounding=edgeRounding, fill=fillRectangle,
-                                       tag=f"rectangle {rectangleCount}")
+                                       tag=f"rectangle {tools.rectangle_count}")
 
                 # For creating rectangles
                 else:
@@ -69,53 +66,57 @@ def rectangleTool(pad_name, lineColor, lineThickness, edgeRounding, fillRectangl
                             second_point = mouse_position
                             draw_rectangle(pad_name, pmin=first_point, pmax=second_point, color=lineColor,
                                            thickness=lineThickness, rounding=edgeRounding, fill=fillRectangle,
-                                           tag=f"rectangle {rectangleCount}")
+                                           tag=f"rectangle {tools.rectangle_count}")
                         # Check if in third quadrant
                         else:
                             first_point = [get_drawing_mouse_pos()[0], mouse_position[1]]
                             second_point = [mouse_position[0], get_drawing_mouse_pos()[1]]
                             draw_rectangle(pad_name, pmin=first_point, pmax=second_point, color=lineColor,
                                            thickness=lineThickness, rounding=edgeRounding, fill=fillRectangle,
-                                           tag=f"rectangle {rectangleCount}")
+                                           tag=f"rectangle {tools.rectangle_count}")
                     # Check if in first quadrant
                     elif get_drawing_mouse_pos()[1] < mouse_position[1]:
                         first_point = [mouse_position[0], get_drawing_mouse_pos()[1]]
                         second_point = [get_drawing_mouse_pos()[0], mouse_position[1]]
                         draw_rectangle(pad_name, pmin=first_point, pmax=second_point, color=lineColor,
                                        thickness=lineThickness, rounding=edgeRounding, fill=fillRectangle,
-                                       tag=f"rectangle {rectangleCount}")
+                                       tag=f"rectangle {tools.rectangle_count}")
                     # Check if in fourth quadrant
                     else:
-                        draw_rectangle(pad_name, pmin=mouse_position, pmax=get_drawing_mouse_pos(), color=lineColor,
+                        first_point = mouse_position
+                        second_point = get_drawing_mouse_pos()
+                        draw_rectangle(pad_name, pmin=first_point, pmax=second_point, color=lineColor,
                                        thickness=lineThickness, rounding=edgeRounding, fill=fillRectangle,
-                                       tag=f"rectangle {rectangleCount}")
+                                       tag=f"rectangle {tools.rectangle_count}")
                 time.sleep(0.01)
-                line_flag = 1
 
                 # Check if user wants to select the second point of the line
                 if is_mouse_button_released(mvMouseButton_Left):
                     # If the user clicks outside the drawing pad, it is assumed that they want to terminate the tool
                     if get_active_window() != "Drawing Pad":
-                        delete_draw_command(pad_name, f"rectangle {rectangleCount}")
-                        print("\nRectangle tool terminated.")
+                        delete_draw_command(pad_name, f"rectangle {tools.rectangle_count}")
                         return
 
-                    rectangleCount += 1
+                    write_db(tool="rectangle tool", point_1=str(first_point), point_2=str(second_point),
+                             color=str(lineColor), thickness=lineThickness, rounding=edgeRounding, fill=str(fillRectangle),
+                             tag=f"rectangle {tools.rectangle_count}")
+
+                    tools.rectangle_count += 1
                     time.sleep(0.01)
                     return
 
                 # Check if user wants to exit the line tool
                 if is_mouse_button_released(mvMouseButton_Right):
-                    delete_draw_command(pad_name, f"rectangle {rectangleCount}")
+                    delete_draw_command(pad_name, f"rectangle {tools.rectangle_count}")
                     return
 
                 # Check if user wants to exit the line tool
                 if is_key_released(mvKey_Escape):
-                    delete_draw_command(pad_name, f"rectangle {rectangleCount}")
+                    delete_draw_command(pad_name, f"rectangle {tools.rectangle_count}")
                     return
 
                 # Delete the line drawn and begin the process again till user clicks the second point or exits the tool
-                delete_draw_command(pad_name, f"rectangle {rectangleCount}")
+                delete_draw_command(pad_name, f"rectangle {tools.rectangle_count}")
 
 
 def fillRectangleCheckbox():

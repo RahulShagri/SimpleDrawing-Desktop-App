@@ -6,11 +6,13 @@ from tkinter.filedialog import asksaveasfilename
 from PIL import Image
 import os
 
+from db_manage import saveDatabase
+
 from dearpygui.core import *
 
 file_path = ''
 
-def saveImageTool():
+def saveTool():
     global file_path
 
     delete_draw_command("Pad", "cursorX")
@@ -29,11 +31,17 @@ def saveImageTool():
     im = pyautogui.screenshot()
     file_path = asksaveasfilename(title="SimpleDrawing save image window",
                                   initialfile="New SimpleDrawing",
-                                  filetypes=[("JPEG (*.jpg, *.jpeg)", "*.jpg"), ("PNG (*.png)", "*.png"), ("PDF (*.pdf)", "*.pdf")],
-                                  defaultextension= [("JPEG (*.jpg, *.jpeg)", "*.jpg"), ("PNG (*.png)", "*.png"), ("PDF (*.pdf)", "*.pdf")])
+                                  filetypes=[("SimpleDrawing File (*.db)", "*.db"), ("JPEG (*.jpg, *.jpeg)", "*.jpg"), ("PNG (*.png)", "*.png"), ("PDF (*.pdf)", "*.pdf")],
+                                  defaultextension= [("SimpleDrawing File (*.db)", "*.sdw"), ("JPEG (*.jpg, *.jpeg)", "*.jpg"), ("PNG (*.png)", "*.png"), ("PDF (*.pdf)", "*.pdf")])
+
+    win32gui.SetForegroundWindow(hwnd)
+
     if file_path:
 
-        if file_path[-4:] == ".pdf":
+        if file_path[-3:] == ".db":
+            saveDatabase(file_path)
+
+        elif file_path[-4:] == ".pdf":
             im.save(f"{file_path[:-4]}.png")
             im = Image.open(f"{file_path[:-4]}.png")
             im = im.crop((335, 80, 1352, 683))

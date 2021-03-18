@@ -5,11 +5,10 @@ from dearpygui.simple import *
 # Import additional modules
 import threading
 import webbrowser
-import pyautogui
-import win32gui, win32con
 
-# Import tool scripts
+# Import dependent scripts
 import tools
+from db_manage import *
 
 # Importing Tool Specifications Template Class
 from ToolSpecTemplate import *
@@ -202,9 +201,9 @@ def tool_callbacks(caller_button):
         add_color_edit4("Color", default_value=[0, 255, 255, 255], parent="tool properties", width=170)
 
         doodle_specifications.add_instructions(value="Left click on the drawing pad to set\n"
-                                                            "the first point. Then left click, right\n"
-                                                            "click or hit escape key to end the line\n"
-                                                            "tool.")
+                                                     "the first point. Then left click, to end\n"
+                                                     "the tool. Right click or hit escape key\n"
+                                                     "to undo the drawn line")
 
 
         set_item_callback("Apply", callback=apply_settings_dispatcher, callback_data="doodle tool")
@@ -600,11 +599,30 @@ with window("Main Window"):
 
     with menu_bar("Main menu bar"):
         with menu("File"):
-            add_menu_item("Save drawing", callback=tools.saveImageTool, shortcut='Ctrl + S')
+            add_menu_item("Open drawing", callback=tools.saveTool, shortcut='Ctrl + O')
+            add_menu_item("Save drawing", callback=tools.openTool, shortcut='Ctrl + S')
+
+        with menu("Edit"):
+            add_menu_item("Undo", callback=lambda data: read_db(action="undo"), shortcut='Ctrl + Z')
+            add_menu_item("Redo", callback=lambda data: read_db(action="redo"), shortcut='Ctrl + Y')
+
+        with menu("Tools##menu"):
+            add_menu_item("Straight line tool", callback=lambda data: tool_callback_dispatcher(sender="straight line tool"))
+            add_menu_item("Dashed line tool", callback=lambda data: tool_callback_dispatcher(sender="dashed line tool"))
+            add_menu_item("Polyline tool", callback=lambda data: tool_callback_dispatcher(sender="polyline tool"))
+            add_menu_item("Doodle tool", callback=lambda data: tool_callback_dispatcher(sender="doodle tool"))
+            add_menu_item("Rectangle tool", callback=lambda data: tool_callback_dispatcher(sender="rectangle tool"))
+            add_menu_item("Circle tool", callback=lambda data: tool_callback_dispatcher(sender="circle tool"))
+            add_menu_item("Arrow tool", callback=lambda data: tool_callback_dispatcher(sender="arrow tool"))
+            add_menu_item("Bezier tool", callback=lambda data: tool_callback_dispatcher(sender="bezier tool"))
+            add_menu_item("Text tool", callback=lambda data: tool_callback_dispatcher(sender="text tool"))
+
+        with menu("Help"):
+            add_menu_item("About", callback=open_website, callback_data="https://github.com/RahulShagri/SimpleDrawing-Desktop-App")
 
 # Tools window widget
 with window("Tools", no_collapse=True, no_resize=True, no_move=True, no_close=True, x_pos=0, y_pos=25, width=80,
-            height=425): #1370
+            height=425):
     # Tool Bar window styling
     set_item_color("Tools", color=[200, 200, 200], style=mvGuiCol_WindowBg)
     set_item_color("Tools", color=[225, 225, 225], style=mvGuiCol_TitleBg)
@@ -690,6 +708,7 @@ with window("reset", no_collapse=True, no_resize=True, no_move=True, no_close=Tr
     add_image_button(name="reset tool", value="icons/reset-tool.png", width=45, height=45, frame_padding=5,
                      tip="Reset entire drawing pad")
 
+
     with popup(popupparent="reset tool", name="Are you sure you want to erase the drawing pad?", modal=True, mousebutton=mvMouseButton_Left):
         add_spacing(count=1)
         add_button("Yes##reset", width=150, height=25, callback=tool_callback_dispatcher)
@@ -744,7 +763,6 @@ with window("Mouse Pad Coordinates", no_close=True, no_collapse=True, no_resize=
 
     set_item_style_var("Mouse Pad Coordinates", style=mvGuiStyleVar_WindowPadding, value=[8, 8])
 
-
     add_text("Mouse coordinates:")
 
 # Window to display SimpleDrawing version number
@@ -777,11 +795,15 @@ with window("DPG", no_close=True, no_collapse=True, no_resize=True, no_title_bar
     set_item_style_var("DPG", style=mvGuiStyleVar_WindowPadding, value=[0, 0])
     set_item_style_var("DPG", style=mvGuiStyleVar_FramePadding, value=[0, 0])
 
-
     add_button("Powered by Dear PyGui", callback=open_website, callback_data="https://github.com/hoffstadt/DearPyGui")
 
 set_mouse_move_callback(pad_mouse_coordinates)
-set_key_down_callback(tools.hotkeyCommands)
+set_key_press_callback(tools.hotkeyCommands)
 
-# Start app
-start_dearpygui(primary_window="Main Window")
+def main():
+    create_db()
+    # Start app
+    start_dearpygui(primary_window="Main Window")
+
+if __name__ == '__main__':
+    main()
