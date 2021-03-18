@@ -4,7 +4,6 @@ import time
 
 from db_manage import *
 
-
 def hotkeyCommands():
     if is_key_down(mvKey_Control):
         if is_key_pressed(mvKey_S):

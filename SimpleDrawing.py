@@ -800,7 +800,7 @@ with window("DPG", no_close=True, no_collapse=True, no_resize=True, no_title_bar
     add_button("Powered by Dear PyGui", callback=open_website, callback_data="https://github.com/hoffstadt/DearPyGui")
 
 set_mouse_move_callback(pad_mouse_coordinates)
-set_key_press_callback(tools.hotkeyCommands)
+set_key_down_callback(tools.hotkeyCommands)
 
 def main():
     create_db()
