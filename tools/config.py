@@ -7,3 +7,4 @@ circle_count = 1
 arrow_count = 1
 bezier_count = 1
 text_count = 1
+image_count = 1

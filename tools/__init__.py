@@ -34,3 +34,6 @@ from tools.arrowTool import arrowTool
 from tools.bezierTool import bezierTool
 
 from tools.textTool import textTool
+
+from tools.imageTool import imageTool
+from tools.imageTool import searchImage

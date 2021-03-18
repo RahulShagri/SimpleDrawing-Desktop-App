@@ -29,6 +29,7 @@ def create_db():
                     Rounding real,
                     Size real,
                     Text text,
+                    Image text,
                     Tag text)""")
 
     conn.commit()
@@ -36,7 +37,7 @@ def create_db():
 
 
 def write_db(tool: str, point_1='', point_2='', point_3='', point_4='', color='', canvasBefore='', canvasAfter='',
-             thickness=0.0, spacing=0.0, fill='', rounding=0.0, size=0.0, text='', tag=''):
+             thickness=0.0, spacing=0.0, fill='', rounding=0.0, size=0.0, text='', image='', tag=''):
 
     global row_count, canvasColorBefore, row_pointer, flag
 
@@ -104,6 +105,10 @@ def write_db(tool: str, point_1='', point_2='', point_3='', point_4='', color=''
     elif tool == "canvas color tool":
         c.execute("""INSERT INTO SimpleDrawingTools (RowID, Tool, CanvasBefore, CanvasAfter)
         VALUES (?, ?, ?, ?)""", (row_count, tool, canvasBefore, canvasAfter))
+
+    elif tool == "image tool":
+        c.execute("""INSERT INTO SimpleDrawingTools (RowID, Tool, Point_1, Point_2, Image, Tag)
+        VALUES (?, ?, ?, ?, ?, ?)""", (row_count, tool, point_1, point_2, image, tag))
 
         if flag == 1:
             c.execute(f"UPDATE SimpleDrawingTools SET CanvasBefore = '{canvasColorBefore}' WHERE RowID = {row_count}")
@@ -213,6 +218,11 @@ def read_db(action: str):
             toolInfo = c.fetchone()
             draw_text("Pad", pos=string_to_list(toolInfo[0]), color=string_to_list(toolInfo[1]), size=int(toolInfo[2]), text=toolInfo[3], tag=toolInfo[4])
 
+        elif tool == 'image tool':
+            toolInfo = c.execute(f"SELECT Point_1, Point_2, Image, Tag FROM SimpleDrawingTools WHERE RowID={row_pointer}")
+            toolInfo = c.fetchone()
+            draw_image("Pad", pmin=string_to_list(toolInfo[0]), pmax=string_to_list(toolInfo[1]), file=toolInfo[2], tag=toolInfo[3])
+
     conn.close()
 
 def open_db(filepath):
@@ -223,7 +233,6 @@ def open_db(filepath):
 
     original = filepath
     target = os.path.abspath("SimpleDrawingTemp_db.db")
-    print(target)
     shutil.copyfile(original, target)
 
     clear_drawing("Pad")
@@ -337,6 +346,11 @@ def open_db(filepath):
                       text=toolInfo[3], tag=toolInfo[4])
 
             tools.text_count = int(toolInfo[4][-1]) + 1
+
+        elif tool == 'image tool':
+            toolInfo = c.execute(f"SELECT Point_1, Point_2, Image, Tag FROM SimpleDrawingTools WHERE RowID={row}")
+            toolInfo = c.fetchone()
+            draw_image("Pad", pmin=string_to_list(toolInfo[0]), pmax=string_to_list(toolInfo[1]), file=toolInfo[2], tag=toolInfo[3])
 
         row_count = row
         row_pointer = row

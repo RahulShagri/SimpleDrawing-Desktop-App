@@ -82,6 +82,10 @@ def apply_settings(sender, data):
     if data == "text tool":
         tools.textTool("Pad", get_value("Text"), get_value("Color"), get_value("Size"))
 
+    if data == 'image tool':
+        if get_value("##imagePath") != "Please select an image.":
+            tools.imageTool("Pad", get_value("##imagePath"))
+
 # Setting up a new thread for running the tool scripts
 def apply_settings_dispatcher(sender, data):
     settings_thread = threading.Thread(name="toolSettingsCallbackThread", target=apply_settings, args=(sender, data,),
@@ -338,8 +342,29 @@ def tool_callbacks(caller_button):
         set_item_callback("Apply", callback=apply_settings_dispatcher, callback_data="text tool")
         set_item_callback("Cancel", callback=apply_settings_dispatcher, callback_data="cancel tool")
 
-        # Straight line main function call
+        # Test main function call
         tools.textTool("Pad", "Example Text", get_value("Color"), get_value("Size"))
+
+    if caller_button == "image tool":
+        # Setting up the properties column
+        delete_item("Tool Specifications", children_only=True)
+
+        image_specifications = ToolSpec(title="               Image Tool Properties", height=105)
+
+        add_button("Search image", parent="tool properties", height=30, width=210, callback=tools.searchImage)
+        image_specifications.add_space(count=2)
+        add_input_text(name="##imagePath", multiline=True, readonly=True, parent="tool properties", height=25, width=210)
+        set_value("##imagePath", "Please select an image.")
+
+        image_specifications.add_instructions(value="Left click on the canvas to initiate the\n"
+                                                   "text tool. When you are satisfied with\n"
+                                                   "the placement, left click again to\n"
+                                                   "place the text.\n\n"
+                                                   "Right clicking or pressing the escape\n"
+                                                   "key will terminate the text tool.")
+
+        set_item_callback("Apply", callback=apply_settings_dispatcher, callback_data="image tool")
+        set_item_callback("Cancel", callback=apply_settings_dispatcher, callback_data="cancel tool")
 
 
 # Setting up a new thread for running the tool scripts
@@ -446,6 +471,9 @@ def theme_switcher(sender):
         add_spacing(count=1, parent="Tools")
         add_image_button(name="text tool", value="icons/dark-text-tool.png", width=45, height=45, frame_padding=5,
                          tip="Text tool", callback=tool_callback_dispatcher, parent="Tools")
+        add_spacing(count=1, parent="Tools")
+        add_image_button(name="image tool", value="icons/dark-image-tool.png", width=45, height=45, frame_padding=5,
+                         tip="Image tool", callback=tool_callback_dispatcher, parent="Tools")
 
         delete_item("reset", children_only=True)
 
@@ -561,6 +589,9 @@ def theme_switcher(sender):
         add_spacing(count=1, parent="Tools")
         add_image_button(name="text tool", value="icons/text-tool.png", width=45, height=45, frame_padding=5,
                          tip="Text tool", callback=tool_callback_dispatcher, parent="Tools")
+        add_spacing(count=1, parent="Tools")
+        add_image_button(name="image tool", value="icons/image-tool.png", width=45, height=45, frame_padding=5,
+                         tip="Image tool", callback=tool_callback_dispatcher, parent="Tools")
 
         delete_item("reset", children_only=True)
 
@@ -603,6 +634,7 @@ with window("Main Window"):
         with menu("File"):
             add_menu_item("Open drawing", callback=tools.openTool, shortcut='Ctrl + O')
             add_menu_item("Save drawing", callback=tools.saveTool, shortcut='Ctrl + S')
+            add_menu_item("Exit", callback=lambda: stop_dearpygui())
 
         with menu("Edit"):
             add_menu_item("Undo", callback=lambda data: read_db(action="undo"), shortcut='Ctrl + Z')
@@ -667,6 +699,9 @@ with window("Tools", no_collapse=True, no_resize=True, no_move=True, no_close=Tr
     add_spacing(count=1)
     add_image_button(name="text tool", value="icons/text-tool.png", width=45, height=45, frame_padding=5,
                      tip="Text tool", callback=tool_callback_dispatcher)
+    add_spacing(count=1)
+    add_image_button(name="image tool", value="icons/image-tool.png", width=45, height=45, frame_padding=5,
+                     tip="Image tool", callback=tool_callback_dispatcher)
 
 with window("miscTools", no_collapse=True, no_resize=True, no_move=True, no_close=True, x_pos=5, y_pos=460, width=70,
             height=140, no_title_bar=True):
