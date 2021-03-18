@@ -13,14 +13,15 @@ A very basic desktop app built using DearPyGui framework for sketching purposes.
 7. Draw arrows
 8. Draw 4-point Bézier curves
 9. Add text on canvas
-10. Constraint lines to horizontal, vertical, or 45&deg; by holding down the shift key
-11. Constraint rectangles to squares by holding down the shift key
-12. Change canvas color
-13. Switch between dark and light mode
-14. Erase all drawn lines
-15. Save drawing as a jpg, png, or pdf file
-16. Save drawing as a database file that can be opened and edited
-17. Undo and redo all tools used
+10. Add image on canvas
+11. Constraint lines to horizontal, vertical, or 45&deg; by holding down the shift key
+12. Constraint rectangles to squares by holding down the shift key
+13. Change canvas color
+14. Switch between dark and light mode
+15. Erase all drawn lines
+16. Save drawing as a jpg, png, or pdf file
+17. Save drawing as a database file that can be opened and edited
+18. Undo and redo all tools used
 
 <H3>Instructions</H3>
 
