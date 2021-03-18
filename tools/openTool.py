@@ -30,4 +30,5 @@ def openTool():
 
     win32gui.SetForegroundWindow(hwnd)
 
-    open_db(file_path)
+    if file_path:
+        open_db(file_path)

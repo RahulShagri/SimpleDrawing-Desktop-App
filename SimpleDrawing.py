@@ -573,6 +573,8 @@ def theme_switcher(sender):
             add_button("Yes##reset", width=150, height=25, callback=tool_callback_dispatcher)
             add_same_line(spacing=10)
             add_button("No##reset", width=150, height=25, callback=tool_callback_dispatcher)
+            set_item_style_var("Are you sure you want to erase the drawing pad?", style=mvGuiStyleVar_WindowRounding,
+                               value=[12])
 
 # Main Window widget
 with window("Main Window"):
