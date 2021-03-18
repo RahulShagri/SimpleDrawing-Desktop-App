@@ -26,7 +26,8 @@ def straightLineTool(pad_name, lineColor, lineThickness):
                     angle = get_angle(mouse_position, point2)
 
                     if angle>=0 and angle<=30:
-                        draw_line(pad_name, p1=mouse_position, p2=[point2[0], mouse_position[1]], color=lineColor,
+                        point2 = [point2[0], mouse_position[1]]
+                        draw_line(pad_name, p1=mouse_position, p2=point2, color=lineColor,
                                   thickness=lineThickness, tag=f"straightLine {tools.straight_line_count}")
 
                     elif angle>30 and angle<=60:
@@ -45,11 +46,13 @@ def straightLineTool(pad_name, lineColor, lineThickness):
                             else:
                                 p2_Y = mouse_position[1] - (mouse_position[0] - point2[0])
 
-                        draw_line(pad_name, p1=mouse_position, p2=[point2[0], p2_Y], color=lineColor,
+                        point2 = [point2[0], p2_Y]
+                        draw_line(pad_name, p1=mouse_position, p2=point2, color=lineColor,
                                   thickness=lineThickness, tag=f"straightLine {tools.straight_line_count}")
 
                     elif angle>60 and angle<=90:
-                        draw_line(pad_name, p1=mouse_position, p2=[mouse_position[0], point2[1]], color=lineColor,
+                        point2 = [mouse_position[0], point2[1]]
+                        draw_line(pad_name, p1=mouse_position, p2=point2, color=lineColor,
                                   thickness=lineThickness, tag=f"straightLine {tools.straight_line_count}")
 
                 else:
