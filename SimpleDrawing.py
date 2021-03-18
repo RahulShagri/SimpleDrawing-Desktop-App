@@ -601,8 +601,8 @@ with window("Main Window"):
 
     with menu_bar("Main menu bar"):
         with menu("File"):
-            add_menu_item("Open drawing", callback=tools.saveTool, shortcut='Ctrl + O')
-            add_menu_item("Save drawing", callback=tools.openTool, shortcut='Ctrl + S')
+            add_menu_item("Open drawing", callback=tools.openTool, shortcut='Ctrl + O')
+            add_menu_item("Save drawing", callback=tools.saveTool, shortcut='Ctrl + S')
 
         with menu("Edit"):
             add_menu_item("Undo", callback=lambda data: read_db(action="undo"), shortcut='Ctrl + Z')
