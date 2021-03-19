@@ -11,7 +11,7 @@ def doodleTool(pad_name, lineColor, lineThickness):
 
             # If mouse is clicked outside the Drawing Pad, exit the tool.
             if get_active_window() != "Drawing Pad":
-                return
+                break
 
             # Continue of clicked on the pad_name
             mouse_position = get_drawing_mouse_pos()
@@ -31,16 +31,16 @@ def doodleTool(pad_name, lineColor, lineThickness):
                     write_db(tool="doodle tool", point_1=str(doodleCoordinates), color=str(lineColor), thickness=lineThickness, tag=f"doodle {tools.doodle_count}")
                     tools.doodle_count += 1
                     time.sleep(0.01)
-                    return
+                    break
 
                 # Check if user wants to exit the line tool
                 if is_mouse_button_released(mvMouseButton_Right):
                     delete_draw_command(pad_name, f"doodle {tools.doodle_count}")
-                    return
+                    break
 
                 # Check if user wants to exit the line tool
                 if is_key_released(mvKey_Escape):
                     delete_draw_command(pad_name, f"doodle {tools.doodle_count}")
-                    return
+                    break
 
                 delete_draw_command(pad_name, f"doodle {tools.doodle_count}")

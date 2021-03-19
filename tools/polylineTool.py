@@ -11,7 +11,7 @@ def polylineTool(pad_name, lineColor, lineThickness):
 
             # If mouse is clicked outside the Drawing Pad, exit the tool.
             if get_active_window() != "Drawing Pad":
-                return
+                break
 
             # Continue of clicked on the drawing pad
             first_point = get_drawing_mouse_pos()
@@ -75,7 +75,7 @@ def polylineTool(pad_name, lineColor, lineThickness):
                                      thickness=lineThickness, tag=f"polyLine {tools.polyline_count}")
                             tools.polyline_count += 1
 
-                        return
+                        break
 
                     write_db(tool="polyline tool", point_1=str(mouse_position), point_2=str(point2), color=str(lineColor),
                              thickness=lineThickness, tag=f"polyLine {tools.polyline_count}")
@@ -96,7 +96,7 @@ def polylineTool(pad_name, lineColor, lineThickness):
                                  thickness=lineThickness, tag=f"polyLine {tools.polyline_count}")
                         tools.polyline_count += 1
 
-                    return
+                    break
 
                 # Check if user wants to exit the line tool
                 if is_key_released(mvKey_Escape):
@@ -111,7 +111,7 @@ def polylineTool(pad_name, lineColor, lineThickness):
                                  thickness=lineThickness, tag=f"polyLine {tools.polyline_count}")
                         tools.polyline_count += 1
 
-                    return
+                    break
 
                 # Delete the line drawn and begin the process again till user clicks the second point or exits the tool
                 delete_draw_command(pad_name, f"polyLine {tools.polyline_count}")

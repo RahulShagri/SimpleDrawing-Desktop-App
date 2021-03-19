@@ -21,7 +21,7 @@ def imageTool(pad_name, file):
 
             # If mouse is clicked outside the Drawing Pad, exit the tool.
             if get_active_window() != "Drawing Pad":
-                return
+                break
 
             # Continue if clicked on the drawing pad
             mouse_position = get_drawing_mouse_pos()
@@ -72,22 +72,22 @@ def imageTool(pad_name, file):
                     # If the user clicks outside the drawing pad, it is assumed that they want to terminate the tool
                     if get_active_window() != "Drawing Pad":
                         delete_draw_command(pad_name, f"image {tools.image_count}")
-                        return
+                        break
 
                     write_db(tool="image tool", point_1=str(first_point), point_2=str(second_point), image=file, tag=f"image {tools.image_count}")
                     tools.image_count += 1
                     time.sleep(0.01)
-                    return
+                    break
 
                 # Check if user wants to exit the line tool
                 if is_mouse_button_released(mvMouseButton_Right):
                     delete_draw_command(pad_name, f"image {tools.image_count}")
-                    return
+                    break
 
                 # Check if user wants to exit the line tool
                 if is_key_released(mvKey_Escape):
                     delete_draw_command(pad_name, f"image {tools.image_count}")
-                    return
+                    break
 
                 # Delete the line drawn and begin the process again till user clicks the second point or exits the tool
                 delete_draw_command(pad_name, f"image {tools.image_count}")

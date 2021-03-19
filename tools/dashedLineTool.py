@@ -136,7 +136,7 @@ def dashedLineTool(pad_name, lineColor, lineThickness, lineSpacing):
 
             # If mouse is clicked outside the Drawing Pad, exit the tool.
             if get_active_window() != "Drawing Pad":
-                return
+                break
 
             # Continue of clicked on the drawing pad
             mouse_position = get_drawing_mouse_pos()
@@ -189,22 +189,22 @@ def dashedLineTool(pad_name, lineColor, lineThickness, lineSpacing):
                     # If the user clicks outside the drawing pad, it is assumed that they want to terminate the tool
                     if get_active_window() != "Drawing Pad":
                         clear_dashed_line(pad_name, f"dashedLine {tools.dashed_line_count}")
-                        return
+                        break
 
                     write_db(tool="dashed line tool", point_1=str(mouse_position), point_2=str(point2), color=str(lineColor), thickness=lineThickness, spacing=lineSpacing, tag=f"dashedLine {tools.dashed_line_count}")
                     tools.dashed_line_count += 1
                     time.sleep(0.01)
-                    return
+                    break
 
                 # Check if user wants to exit the line tool
                 if is_mouse_button_released(mvMouseButton_Right):
                     clear_dashed_line(pad_name, f"dashedLine {tools.dashed_line_count}")
-                    return
+                    break
 
                 # Check if user wants to exit the line tool
                 if is_key_released(mvKey_Escape):
                     clear_dashed_line(pad_name, f"dashedLine {tools.dashed_line_count}")
-                    return
+                    break
 
                 # Delete the line drawn and begin the process again till user clicks the second point or exits the tool
                 clear_dashed_line(pad_name, f"dashedLine {tools.dashed_line_count}")

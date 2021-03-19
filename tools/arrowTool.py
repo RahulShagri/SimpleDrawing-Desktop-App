@@ -14,7 +14,7 @@ def arrowTool(pad_name, arrowColor, lineThickness, arrowSize):
 
             # If mouse is clicked outside the Drawing Pad, exit the tool.
             if get_active_window() != "Drawing Pad":
-                return
+                break
 
             # Continue of clicked on the drawing pad
             mouse_position = get_drawing_mouse_pos()
@@ -31,23 +31,23 @@ def arrowTool(pad_name, arrowColor, lineThickness, arrowSize):
                     # If the user clicks outside the drawing pad, it is assumed that they want to terminate the tool
                     if get_active_window() != "Drawing Pad":
                         delete_draw_command(pad_name, f"arrow {tools.arrow_count}")
-                        return
+                        break
 
                     write_db(tool="arrow tool", point_1=str(mouse_position), point_2=str(point2), color=str(arrowColor), thickness=lineThickness, size=arrowSize, tag=f"arrow {tools.arrow_count}")
 
                     tools.arrow_count += 1
                     time.sleep(0.01)
-                    return
+                    break
 
                 # Check if user wants to exit the line tool
                 if is_mouse_button_released(mvMouseButton_Right):
                     delete_draw_command(pad_name, f"arrow {tools.arrow_count}")
-                    return
+                    break
 
                 # Check if user wants to exit the line tool
                 if is_key_released(mvKey_Escape):
                     delete_draw_command(pad_name, f"arrow {tools.arrow_count}")
-                    return
+                    break
 
                 # Delete the line drawn and begin the process again till user clicks the second point or exits the tool
                 delete_draw_command(pad_name, f"arrow {tools.arrow_count}")
