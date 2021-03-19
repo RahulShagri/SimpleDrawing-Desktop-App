@@ -356,12 +356,15 @@ def tool_callbacks(caller_button):
         add_input_text(name="##imagePath", multiline=True, readonly=True, parent="tool properties", height=25, width=210)
         set_value("##imagePath", "Please select an image.")
 
-        image_specifications.add_instructions(value="Left click on the canvas to initiate the\n"
-                                                   "text tool. When you are satisfied with\n"
-                                                   "the placement, left click again to\n"
-                                                   "place the text.\n\n"
-                                                   "Right clicking or pressing the escape\n"
-                                                   "key will terminate the text tool.")
+        image_specifications.add_instructions(value="Select an image by clicking on the\n"
+                                                    "\"Search image\" button and then click\n"
+                                                    "apply. Left click on the drawing pad\n"
+                                                    "to select the first point and then left\n"
+                                                    "click again to place the image.\n"
+                                                    "\n"
+                                                    "Hold down shift while placing the\n"
+                                                    "image to fix the aspect ratio of the\n"
+                                                    "image.")
 
         set_item_callback("Apply", callback=apply_settings_dispatcher, callback_data="image tool")
         set_item_callback("Cancel", callback=apply_settings_dispatcher, callback_data="cancel tool")
