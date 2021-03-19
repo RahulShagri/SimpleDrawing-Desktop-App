@@ -650,6 +650,7 @@ with window("Main Window"):
             add_menu_item("Arrow tool", callback=lambda data: tool_callback_dispatcher(sender="arrow tool"))
             add_menu_item("Bezier tool", callback=lambda data: tool_callback_dispatcher(sender="bezier tool"))
             add_menu_item("Text tool", callback=lambda data: tool_callback_dispatcher(sender="text tool"))
+            add_menu_item("Image tool", callback=lambda data: tool_callback_dispatcher(sender="image tool"))
 
         with menu("Help"):
             add_menu_item("About", callback=open_website, callback_data="https://github.com/RahulShagri/SimpleDrawing-Desktop-App")
