@@ -16,12 +16,13 @@ A very basic desktop app built using DearPyGui framework for sketching purposes.
 10. Add image on canvas
 11. Constraint lines to horizontal, vertical, or 45&deg; by holding down the shift key
 12. Constraint rectangles to squares by holding down the shift key
-13. Change canvas color
-14. Switch between dark and light mode
-15. Erase all drawn lines
-16. Save drawing as a jpg, png, or pdf file
-17. Save drawing as a database file that can be opened and edited
-18. Undo and redo all tools used
+13. Constraint images to their correct aspect ratio by holding down the shift key
+14. Change canvas color
+15. Switch between dark and light mode
+16. Erase all drawn lines
+17 Save drawing as a jpg, png, or pdf file
+18. Save drawing as a database file that can be opened and edited
+19. Undo and redo all tools used
 
 <H3>Instructions</H3>
 
