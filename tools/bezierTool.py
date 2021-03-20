@@ -7,7 +7,6 @@ from db_manage import *
 def bezierTool(pad_name, lineColor, lineThickness):
 
     while True:
-        print('reset')
         temp_polyline_count = 0
         bezier_points = []
         flag = 0
@@ -135,7 +134,6 @@ def bezierTool(pad_name, lineColor, lineThickness):
 
                     # Check if user wants to exit the tool
                     if is_mouse_button_released(mvMouseButton_Right):
-                        print(temp_polyline_count)
                         # Deleting reference poly-lines
                         for count in range(temp_polyline_count+1):
                             delete_draw_command(pad_name, f"temp_polyline {count}")

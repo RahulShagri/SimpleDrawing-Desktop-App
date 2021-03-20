@@ -5,7 +5,6 @@ from db_manage import *
 
 
 def textTool(pad_name, userText, textColor, textSize):
-    print("\nText tool initiated.")
 
     time.sleep(0.1)
 
@@ -14,7 +13,6 @@ def textTool(pad_name, userText, textColor, textSize):
         if is_mouse_button_released(mvMouseButton_Left):
             # If mouse is clicked outside the Drawing Pad, exit the tool.
             if get_active_window() != "Drawing Pad":
-                print("\nText tool terminated.")
                 break
 
             time.sleep(0.01)
@@ -30,7 +28,6 @@ def textTool(pad_name, userText, textColor, textSize):
                     # If the user clicks outside the drawing pad, it is assumed that they want to terminate the tool
                     if get_active_window() != "Drawing Pad":
                         delete_draw_command(pad_name, f"text {tools.text_count}")
-                        print("\nText tool terminated.")
                         break
 
                     write_db(tool="text tool", point_1=str(point), text=userText, color=str(textColor), size=textSize,
@@ -43,13 +40,11 @@ def textTool(pad_name, userText, textColor, textSize):
                 # Check if user wants to exit the line tool
                 if is_mouse_button_released(mvMouseButton_Right):
                     delete_draw_command(pad_name, f"text {tools.text_count}")
-                    print("\nText tool terminated.")
                     break
 
                 # Check if user wants to exit the line tool
                 if is_key_released(mvKey_Escape):
                     delete_draw_command(pad_name, f"text {tools.text_count}")
-                    print("\nText tool terminated.")
                     break
 
                 # Delete the line drawn and begin the process again till user clicks the second point or exits the tool

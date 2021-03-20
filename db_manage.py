@@ -141,7 +141,6 @@ def read_db(action: str):
 
         tool = c.execute(f"SELECT Tool FROM SimpleDrawingTools WHERE RowID={row_pointer}")
         tool = c.fetchone()
-        print(tool)
         tool = tool[0]
 
         if tool == 'canvas color tool':
