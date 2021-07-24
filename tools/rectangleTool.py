@@ -6,9 +6,9 @@ import threading
 import time
 import tools.config
 
-left_mouse_flag = 0  # Handling left mouse button clicks
-esc_key_flag = 0  # Handling escape key button presses
-shift_key_flag = 0  # Handling shift key button presses
+left_mouse_release_flag = 0  # Handling left mouse button clicks
+esc_key_release_flag = 0  # Handling escape key button presses
+shift_key_down_flag = 0  # Handling shift key button presses
 
 dpg.setup_registries()  # Registries for mouse and keyboard press events
 
@@ -44,20 +44,20 @@ def set_rectangleTool_properties():
 
 def mouse_key_release_handler(sender, app_data):
     # Function changes flags when a mouse or key release event occurs
-    global left_mouse_flag, esc_key_flag
+    global left_mouse_release_flag, esc_key_release_flag
 
     if app_data == 0:
-        left_mouse_flag = 1  # Marking flag as 1 to indicate left mouse button has been released
+        left_mouse_release_flag = 1  # Marking flag as 1 to indicate left mouse button has been released
 
     elif app_data == 27:
-        esc_key_flag = 1  # Marking flag as 1 to indicate escape key has been released
+        esc_key_release_flag = 1  # Marking flag as 1 to indicate escape key has been released
 
 
 def mouse_key_down_handler(sender, app_data):
     # Function changes flags when a mouse or key down event occurs
-    global shift_key_flag
+    global shift_key_down_flag
     if app_data[0] == 16:
-        shift_key_flag = 1  # Marking flag as 1 to indicate shift key has been released
+        shift_key_down_flag = 1  # Marking flag as 1 to indicate shift key has been released
 
 
 def check_fillRectangle():
@@ -83,7 +83,7 @@ def rectangleToolDispatcher():
 
 
 def start_rectangleTool():
-    global left_mouse_flag, esc_key_flag, shift_key_flag
+    global left_mouse_release_flag, esc_key_release_flag, shift_key_down_flag
 
     # Get user settings
     thickness = dpg.get_value(item=line_thickness)
@@ -112,8 +112,8 @@ def start_rectangleTool():
             return
 
         # If the left mouse button is clicked, start drawing
-        if left_mouse_flag == 1:
-            left_mouse_flag = 0  # Reset the flag
+        if left_mouse_release_flag == 1:
+            left_mouse_release_flag = 0  # Reset the flag
             # Check if the user clicks inside the drawing area. If yes, continue, otherwise exit
             if dpg.get_active_window() == drawing_pad:
                 # Keep track of points
@@ -124,8 +124,8 @@ def start_rectangleTool():
                     # Check which quadrant the second point is in, and change the end points accordingly because of
                     # imGui bug
                     # Holding down the shift key will draw a square
-                    if shift_key_flag == 1:
-                        shift_key_flag = 0
+                    if shift_key_down_flag == 1:
+                        shift_key_down_flag = 0
                         if end_points[1][0] < end_points[0][0]:
                             # Check if in second quadrant
                             if end_points[1][1] > end_points[0][1]:
@@ -212,13 +212,13 @@ def start_rectangleTool():
                         return
 
                     # Check if the user clicks inside the drawing area. If yes, continue drawing, otherwise exit
-                    if left_mouse_flag == 1:
-                        left_mouse_flag = 0
+                    if left_mouse_release_flag == 1:
+                        left_mouse_release_flag = 0
                         if dpg.get_active_window() == drawing_pad:
                             break
 
-                    elif esc_key_flag == 1:
-                        esc_key_flag = 0
+                    elif esc_key_release_flag == 1:
+                        esc_key_release_flag = 0
                         dpg.delete_item(temp_rectangle)
                         break
 

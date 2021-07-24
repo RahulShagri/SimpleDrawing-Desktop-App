@@ -10,9 +10,9 @@ import threading
 import time
 import tools.config
 
-left_mouse_flag = 0  # Handling left mouse button clicks
-esc_key_flag = 0  # Handling escape key button presses
-shift_key_flag = 0  # Handling shift key button presses
+left_mouse_release_flag = 0  # Handling left mouse button clicks
+esc_key_release_flag = 0  # Handling escape key button presses
+shift_key_down_flag = 0  # Handling shift key button presses
 
 dpg.setup_registries()  # Registries for mouse and keyboard press events
 
@@ -54,20 +54,20 @@ def set_lineTool_properties():
 
 def mouse_key_release_handler(sender, app_data):
     # Function changes flags when a mouse or key release event occurs
-    global left_mouse_flag, esc_key_flag
+    global left_mouse_release_flag, esc_key_release_flag
 
     if app_data == 0:
-        left_mouse_flag = 1  # Marking flag as 1 to indicate left mouse button has been released
+        left_mouse_release_flag = 1  # Marking flag as 1 to indicate left mouse button has been released
 
     elif app_data == 27:
-        esc_key_flag = 1  # Marking flag as 1 to indicate escape key has been released
+        esc_key_release_flag = 1  # Marking flag as 1 to indicate escape key has been released
 
 
 def mouse_key_down_handler(sender, app_data):
     # Function changes flags when a mouse or key down event occurs
-    global shift_key_flag
+    global shift_key_down_flag
     if app_data[0] == 16:
-        shift_key_flag = 1  # Marking flag as 1 to indicate shift key has been released
+        shift_key_down_flag = 1  # Marking flag as 1 to indicate shift key has been released
 
 
 def check_lineType():
@@ -118,7 +118,7 @@ def start_lineTool():
 
 
 def start_solidLineTool():
-    global left_mouse_flag, esc_key_flag, shift_key_flag
+    global left_mouse_release_flag, esc_key_release_flag, shift_key_down_flag
 
     # Get user settings
     thickness = dpg.get_value(item=line_thickness)
@@ -138,8 +138,8 @@ def start_solidLineTool():
             return
 
         # If the left mouse button is clicked, start drawing
-        if left_mouse_flag == 1:
-            left_mouse_flag = 0  # Reset the flag
+        if left_mouse_release_flag == 1:
+            left_mouse_release_flag = 0  # Reset the flag
             # Check if the user clicks inside the drawing area. If yes, continue, otherwise exit
             if dpg.get_active_window() == drawing_pad:
                 # Keep track of points
@@ -149,8 +149,8 @@ def start_solidLineTool():
                 while True:
                     line_points.append(dpg.get_plot_mouse_pos())
 
-                    if shift_key_flag == 1:
-                        shift_key_flag = 0  # Reset shift key flag
+                    if shift_key_down_flag == 1:
+                        shift_key_down_flag = 0  # Reset shift key flag
                         angle = get_angle(first_point, line_points[-1])
 
                         if 0 <= angle <= 30:
@@ -195,8 +195,8 @@ def start_solidLineTool():
                         return
 
                     # Check if the user clicks inside the drawing area. If yes, continue drawing, otherwise exit
-                    if left_mouse_flag == 1:
-                        left_mouse_flag = 0
+                    if left_mouse_release_flag == 1:
+                        left_mouse_release_flag = 0
                         if dpg.get_active_window() == drawing_pad:
                             first_point = line_points[-1]
                             continue
@@ -212,8 +212,8 @@ def start_solidLineTool():
 
                             break
 
-                    elif esc_key_flag == 1:
-                        esc_key_flag = 0
+                    elif esc_key_release_flag == 1:
+                        esc_key_release_flag = 0
                         dpg.delete_item(temp_line)
                         line_points = line_points[:-1]
 
@@ -230,7 +230,7 @@ def start_solidLineTool():
 
 
 def start_dashedLineTool():
-    global left_mouse_flag, esc_key_flag, shift_key_flag
+    global left_mouse_release_flag, esc_key_release_flag, shift_key_down_flag
     line_points = []  # List of all end points of the lines drawn
 
     # Get user settings
@@ -252,8 +252,8 @@ def start_dashedLineTool():
             return
 
         # If the left mouse button is clicked, start drawing
-        if left_mouse_flag == 1:
-            left_mouse_flag = 0  # Reset the flag
+        if left_mouse_release_flag == 1:
+            left_mouse_release_flag = 0  # Reset the flag
 
             # Check if the user clicks inside the drawing area. If yes, continue, otherwise exit
             if dpg.get_active_window() == drawing_pad:
@@ -272,8 +272,8 @@ def start_dashedLineTool():
                         return
 
                     # Draw a temporary line
-                    if shift_key_flag == 1:
-                        shift_key_flag = 0  # Reset shift key flag
+                    if shift_key_down_flag == 1:
+                        shift_key_down_flag = 0  # Reset shift key flag
                         angle = get_angle(first_point, line_points[-1])
 
                         if 0 <= angle <= 30:
@@ -310,8 +310,8 @@ def start_dashedLineTool():
                                          spacing=spacing, parent=layer_id)
 
                     # Check if the user clicks inside the drawing area. If yes, continue drawing, otherwise exit
-                    if left_mouse_flag == 1:
-                        left_mouse_flag = 0
+                    if left_mouse_release_flag == 1:
+                        left_mouse_release_flag = 0
                         if dpg.get_active_window() == drawing_pad:
                             first_point = line_points[-1]
                             clear_dashed_line(new_line_flag=1)
@@ -327,9 +327,9 @@ def start_dashedLineTool():
                                                  color=color, spacing=spacing, parent=layer_id)
 
                             break
-                    # Check if user presses esc_key_flag and end drawing
-                    elif esc_key_flag == 1:
-                        esc_key_flag = 0
+                    # Check if user presses esc_key_release_flag and end drawing
+                    elif esc_key_release_flag == 1:
+                        esc_key_release_flag = 0
                         clear_dashed_line()
                         line_points = line_points[:-1]
 
@@ -347,7 +347,7 @@ def start_dashedLineTool():
 
 
 def start_dottedLineTool():
-    global left_mouse_flag, esc_key_flag, shift_key_flag
+    global left_mouse_release_flag, esc_key_release_flag, shift_key_down_flag
     line_points = []  # List of all end points of the lines drawn
 
     # Get user settings
@@ -370,8 +370,8 @@ def start_dottedLineTool():
             return
 
         # If the left mouse button is clicked, start drawing
-        if left_mouse_flag == 1:
-            left_mouse_flag = 0  # Reset the flag
+        if left_mouse_release_flag == 1:
+            left_mouse_release_flag = 0  # Reset the flag
 
             # Check if the user clicks inside the drawing area. If yes, continue, otherwise exit
             if dpg.get_active_window() == drawing_pad:
@@ -383,8 +383,8 @@ def start_dottedLineTool():
                     line_points.append(dpg.get_plot_mouse_pos())
                     # Draw a temporary line
 
-                    if shift_key_flag == 1:
-                        shift_key_flag = 0  # Reset shift key flag
+                    if shift_key_down_flag == 1:
+                        shift_key_down_flag = 0  # Reset shift key flag
                         angle = get_angle(first_point, line_points[-1])
 
                         if 0 <= angle <= 30:
@@ -428,8 +428,8 @@ def start_dottedLineTool():
                         return
 
                     # Check if the user clicks inside the drawing area. If yes, continue drawing, otherwise exit
-                    if left_mouse_flag == 1:
-                        left_mouse_flag = 0
+                    if left_mouse_release_flag == 1:
+                        left_mouse_release_flag = 0
                         if dpg.get_active_window() == drawing_pad:
                             first_point = line_points[-1]
                             clear_dotted_line(new_line_flag=1)
@@ -445,9 +445,9 @@ def start_dottedLineTool():
                                                  color=color, spacing=spacing, radius=radius, parent=layer_id)
 
                             break
-                    # Check if user presses esc_key_flag and end drawing
-                    elif esc_key_flag == 1:
-                        esc_key_flag = 0
+                    # Check if user presses esc_key_release_flag and end drawing
+                    elif esc_key_release_flag == 1:
+                        esc_key_release_flag = 0
                         clear_dotted_line()
                         line_points = line_points[:-1]
 
@@ -465,7 +465,7 @@ def start_dottedLineTool():
 
 
 def start_dotDashedLineTool():
-    global left_mouse_flag, esc_key_flag, shift_key_flag
+    global left_mouse_release_flag, esc_key_release_flag, shift_key_down_flag
     line_points = []  # List of all end points of the lines drawn
 
     # Get user settings
@@ -488,8 +488,8 @@ def start_dotDashedLineTool():
             return
 
         # If the left mouse button is clicked, start drawing
-        if left_mouse_flag == 1:
-            left_mouse_flag = 0  # Reset the flag
+        if left_mouse_release_flag == 1:
+            left_mouse_release_flag = 0  # Reset the flag
 
             # Check if the user clicks inside the drawing area. If yes, continue, otherwise exit
             if dpg.get_active_window() == drawing_pad:
@@ -501,8 +501,8 @@ def start_dotDashedLineTool():
                     line_points.append(dpg.get_plot_mouse_pos())
                     # Draw a temporary line
 
-                    if shift_key_flag == 1:
-                        shift_key_flag = 0  # Reset shift key flag
+                    if shift_key_down_flag == 1:
+                        shift_key_down_flag = 0  # Reset shift key flag
                         angle = get_angle(first_point, line_points[-1])
 
                         if 0 <= angle <= 30:
@@ -546,8 +546,8 @@ def start_dotDashedLineTool():
                         return
 
                     # Check if the user clicks inside the drawing area. If yes, continue drawing, otherwise exit
-                    if left_mouse_flag == 1:
-                        left_mouse_flag = 0
+                    if left_mouse_release_flag == 1:
+                        left_mouse_release_flag = 0
                         if dpg.get_active_window() == drawing_pad:
                             first_point = line_points[-1]
                             clear_dot_dashed_line(new_line_flag=1)
@@ -563,9 +563,9 @@ def start_dotDashedLineTool():
                                                      color=color, spacing=spacing, radius=radius, parent=layer_id)
 
                             break
-                    # Check if user presses esc_key_flag and end drawing
-                    elif esc_key_flag == 1:
-                        esc_key_flag = 0
+                    # Check if user presses esc_key_release_flag and end drawing
+                    elif esc_key_release_flag == 1:
+                        esc_key_release_flag = 0
                         clear_dot_dashed_line()
                         line_points = line_points[:-1]
 
