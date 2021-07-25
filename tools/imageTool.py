@@ -16,6 +16,7 @@ dpg.setup_registries()  # Registries for mouse and keyboard press events
 def set_imageTool_properties():
     # Initialize all variables associated with image parameters
     global image_file_path_text, image_file_name_text, image_tool_texture_registry, tool_properties_group
+    global image_color_filter_checkbox, image_color_filter, image_opacity
     global thumbnail_separator, image_thumbnail
 
     blank_width, blank_height, blank_channel, blank_data = dpg.load_image("icons/blank_image.png")
@@ -33,6 +34,12 @@ def set_imageTool_properties():
         dpg.add_separator()
 
         dpg.add_button(label="Select image", width=-1, callback=lambda: dpg.show_item(custom_image_file_directory))
+        image_color_filter_checkbox = dpg.add_checkbox(label="Add color filter", callback=check_image_color_filter)
+        image_color_filter = dpg.add_color_edit(label="Color filter", width=140, no_tooltip=True, no_alpha=True,
+                                                show=False, default_value=[255,255,255,255],
+                                                callback=imageToolDispatcher)
+        image_opacity = dpg.add_drag_int(label="Opacity", default_value=100, clamped=True, min_value=0, max_value=100,
+                                               width=140, format="%f%%", callback=imageToolDispatcher)
         dpg.add_text(default_value="File Name: ")
         dpg.add_same_line()
         image_file_name_text = dpg.add_text(default_value="", color=[0, 255, 0], wrap=200)
@@ -74,6 +81,15 @@ def mouse_key_down_handler(sender, app_data):
         shift_key_down_flag = 1  # Marking flag as 1 to indicate shift key has been released
 
 
+def check_image_color_filter():
+    if dpg.get_value(item=image_color_filter_checkbox):
+        dpg.configure_item(item=image_color_filter, show=True)
+    else:
+        dpg.configure_item(item=image_color_filter, default_value=[255, 255, 255, 255], show=False)
+
+    imageToolDispatcher()
+
+
 def choose_image_file(sender, app_data):
     global image_tool_texture_registry, image_thumbnail, thumbnail_separator
 
@@ -108,6 +124,13 @@ def imageToolDispatcher():
 def start_imageTool():
     global image_tool_texture_registry, image_thumbnail, thumbnail_separator
     global left_mouse_release_flag, shift_key_down_flag, esc_key_release_flag
+
+    # Get user settings for color filter and opacity and make a complete list
+    color_filter = dpg.get_value(item=image_color_filter)
+    opacity = ((dpg.get_value(item=image_opacity))/100)*255  # Calculate percentage of alpha
+    color = color_filter
+    color.pop()
+    color.append(opacity)
 
     # Get what layer the user has selected in the radio button list
     # Get index of list layers from the name in radio button list
@@ -148,7 +171,7 @@ def start_imageTool():
                                 width = aspect_ratio * (end_points[0][1] - end_points[1][1])
                                 second_point = [end_points[0][0] + width, end_points[1][1]]
                                 temp_image = dpg.draw_image(pmin=first_point, pmax=second_point,
-                                                            texture_id=temp_static_image, parent=layer_id)
+                                                            texture_id=temp_static_image, color=color, parent=layer_id)
 
                             # Check if in third quadrant
                             else:
@@ -156,7 +179,7 @@ def start_imageTool():
                                 width = aspect_ratio * (end_points[1][1] - end_points[0][1])
                                 second_point = [end_points[0][0] + width, end_points[1][1]]
                                 temp_image = dpg.draw_image(pmin=first_point, pmax=second_point,
-                                                            texture_id=temp_static_image, parent=layer_id)
+                                                            texture_id=temp_static_image, color=color, parent=layer_id)
 
                         # Check if in first quadrant
                         elif end_points[1][1] > end_points[0][1]:
@@ -164,7 +187,7 @@ def start_imageTool():
                             width = aspect_ratio * (end_points[0][1] - end_points[1][1])
                             second_point = [end_points[0][0] - width, end_points[1][1]]
                             temp_image = dpg.draw_image(pmin=first_point, pmax=second_point,
-                                                        texture_id=temp_static_image, parent=layer_id)
+                                                        texture_id=temp_static_image, color=color, parent=layer_id)
 
                         # Check if in fourth quadrant
                         else:
@@ -172,13 +195,13 @@ def start_imageTool():
                             width = aspect_ratio * (end_points[1][1] - end_points[0][1])
                             second_point = [end_points[0][0] - width, end_points[1][1]]
                             temp_image = dpg.draw_image(pmin=first_point, pmax=second_point,
-                                                        texture_id=temp_static_image, parent=layer_id)
+                                                        texture_id=temp_static_image, color=color, parent=layer_id)
 
                     else:
                         first_point = end_points[0]
                         second_point = end_points[1]
                         temp_image = dpg.draw_image(pmin=first_point, pmax=second_point,
-                                                    texture_id=temp_static_image, parent=layer_id)
+                                                    texture_id=temp_static_image, color=color, parent=layer_id)
 
                     # Check if user wants to select the second point of the line
                     if left_mouse_release_flag == 1:
