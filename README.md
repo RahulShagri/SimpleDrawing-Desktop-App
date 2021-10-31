@@ -1,5 +1,7 @@
 # SimpleDrawing
 
+__*Note: Since the release of this app, Dear PyGui has been updated considerably. This app will not run in the newer versions of Dear PyGui. Please note that this app is not being maintained currently.*__
+
 A very basic desktop app built using DearPyGui framework for sketching purposes.
 
 <h3>Features include:</h3>
